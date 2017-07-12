@@ -6,18 +6,12 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.sge.mobile.application.services.CategoryAppService;
-import com.sge.mobile.application.services.CategoryAppServiceImpl;
-import com.sge.mobile.application.services.ProductAppService;
-import com.sge.mobile.application.services.ProductAppServiceImpl;
-import com.sge.mobile.domain.model.Accesorio;
-import com.sge.mobile.domain.model.Producto;
-import com.sge.mobile.domain.model.Rubro;
+import com.sge.mobile.application.services.SyncAppService;
+import com.sge.mobile.application.services.SyncAppServiceImpl;
 import com.sge.mobile.domain.model.SGEOrderServiceAgent;
 import com.sge.mobile.infrastructure.data.SGEDBHelper;
 import com.sge.mobile.infrastructure.data.serviceagents.SGEOrderServiceAgentImpl;
 
-import java.util.List;
 
 /**
  * Created by Daniel on 04/04/14.
@@ -26,15 +20,13 @@ public class SynchronizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
     private final ProgressDialog progressDialog;
     private final SGEOrderServiceAgent sgeOrderServiceAgent;
     private final Context activity;
-    private final CategoryAppService categoryAppService;
-    private final ProductAppService productAppService;
+    private final SyncAppService syncAppService;
     private SGEDBHelper sgeDBHelper;
-    private boolean connected;
+    private boolean isConnectedToSyncService;
 
     public SynchronizeAsyncTask(Context activity) {
         this.sgeOrderServiceAgent = new SGEOrderServiceAgentImpl();
-        this.categoryAppService = new CategoryAppServiceImpl(this.getSgeDBHelper());
-        this.productAppService = new ProductAppServiceImpl(this.getSgeDBHelper());
+        this.syncAppService = new SyncAppServiceImpl(this.getSgeDBHelper());
         this.activity = activity;
         progressDialog = new ProgressDialog(activity);
         progressDialog.setTitle("Sincronizando");
@@ -60,30 +52,15 @@ public class SynchronizeAsyncTask extends AsyncTask<Void, Void, Boolean> {
         try {
             int i = 0;
             do {
-                this.connected = this.sgeOrderServiceAgent.connected(UserSession.getInstance().getSgeServiceUrl());
-                if (connected) {
-                    List<Rubro> categories = this.sgeOrderServiceAgent.synchcronizeCategories(UserSession.getInstance().getSgeServiceUrl());
-                    for (Rubro category : categories) {
-                        this.categoryAppService.save(category);
-                    }
-
-                    List<Producto> products = this.sgeOrderServiceAgent.synchronizeProducts(this.categoryAppService, UserSession.getInstance().getSgeServiceUrl());
-                    for (Producto product : products) {
-                        this.productAppService.save(product);
-                    }
-
-                    List<Accesorio> accessories = this.sgeOrderServiceAgent.synchronizeAccessories(this.productAppService, UserSession.getInstance().getSgeServiceUrl());
-                    for (Accesorio accessorie : accessories) {
-                        this.productAppService.saveAccessorie(accessorie);
-                    }
-
-                    UserSession.getInstance().setTablesNumber(this.sgeOrderServiceAgent.getTables(UserSession.getInstance().getSgeServiceUrl()));
+                this.isConnectedToSyncService = this.sgeOrderServiceAgent.testConnection(UserSession.getInstance().getSgeServiceUrl());
+                if (isConnectedToSyncService) {
+                    this.syncAppService.syncData();
                 }
                 i++;
-            } while (!this.connected && i <= 10);
+            } while (!this.isConnectedToSyncService && i <= 10);
         } catch (Exception e) {
         }
-        return this.connected;
+        return this.isConnectedToSyncService;
     }
 
     @Override

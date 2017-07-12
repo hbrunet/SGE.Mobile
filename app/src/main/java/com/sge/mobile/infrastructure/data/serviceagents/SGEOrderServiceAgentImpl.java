@@ -256,7 +256,7 @@ public class SGEOrderServiceAgentImpl implements SGEOrderServiceAgent {
     }
 
     @Override
-    public boolean connected(String serviceUrl) {
+    public boolean testConnection(String serviceUrl) {
         final String NAMESPACE = "http://SGE.Service.Contracts.Service";
         final String URL = serviceUrl;
         final String METHOD_NAME = "Connected";

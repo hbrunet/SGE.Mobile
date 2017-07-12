@@ -55,7 +55,7 @@ public class LoginAsyncTask extends AsyncTask<Void, Void, Boolean> {
                 if (config != null && DomainObjectUtils.textHasContent(config.getUrlServicioWebSge())) {
                     int i = 0;
                     do {
-                        this.connected = this.sgeOrderServiceAgent.connected(config.getUrlServicioWebSge());
+                        this.connected = this.sgeOrderServiceAgent.testConnection(config.getUrlServicioWebSge());
                         if (this.connected) {
                             UserSession.getInstance().setSgeServiceUrl(config.getUrlServicioWebSge());
                             UserSession.getInstance()

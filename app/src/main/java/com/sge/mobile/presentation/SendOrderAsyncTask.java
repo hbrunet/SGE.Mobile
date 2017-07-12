@@ -37,7 +37,7 @@ public class SendOrderAsyncTask extends AsyncTask<Void, Void, Boolean> {
         try {
             int i = 0;
             do {
-                this.connected = this.sgeOrderServiceAgent.connected(UserSession.getInstance().getSgeServiceUrl());
+                this.connected = this.sgeOrderServiceAgent.testConnection(UserSession.getInstance().getSgeServiceUrl());
                 if (connected) {
                     this.sgeOrderServiceAgent.sendOrder(UserSession.getInstance().getUserId(),
                             UserSession.getInstance().getOrder().getNroMesa(),

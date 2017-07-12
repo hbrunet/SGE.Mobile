@@ -38,7 +38,7 @@ public class LogOutAsyncTask extends AsyncTask<Void, Void, Boolean> {
             try {
                 int i = 0;
                 do {
-                    this.connected = this.sgeOrderServiceAgent.connected(UserSession.getInstance().getSgeServiceUrl());
+                    this.connected = this.sgeOrderServiceAgent.testConnection(UserSession.getInstance().getSgeServiceUrl());
                     if (this.connected) {
                         this.sgeOrderServiceAgent
                                 .logOut(UserSession.getInstance().getUserId(), UserSession.getInstance()

@@ -23,5 +23,5 @@ public interface SGEOrderServiceAgent {
 
     void sendOrder(int waiter, int table, String order, String notes, String serviceUrl);
 
-    boolean connected(String serviceUrl);
+    boolean testConnection(String serviceUrl);
 }

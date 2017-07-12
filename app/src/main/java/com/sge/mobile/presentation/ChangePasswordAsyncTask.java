@@ -47,7 +47,7 @@ public class ChangePasswordAsyncTask extends AsyncTask<Void, Void, Boolean> {
             if (!UserSession.getInstance().isAdministrator()) {
                 int i = 0;
                 do {
-                    this.connected = this.sgeOrderServiceAgent.connected(UserSession.getInstance().getSgeServiceUrl());
+                    this.connected = this.sgeOrderServiceAgent.testConnection(UserSession.getInstance().getSgeServiceUrl());
                     if (connected) {
                         // todo: llamar al metodo del servicio para cambiar el password
                     /*this.sgeOrderServiceAgent.sendOrder(UserSession.getInstance().getUserId(),

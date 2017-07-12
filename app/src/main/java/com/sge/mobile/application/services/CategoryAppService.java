@@ -17,4 +17,6 @@ public interface CategoryAppService {
     List<Rubro> findActiveCategories();
 
     void save(Rubro category);
+
+    void removeAll();
 }

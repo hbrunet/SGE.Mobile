@@ -14,4 +14,6 @@ public interface ProductAppService {
     void save(Producto product);
 
     void saveAccessorie(Accesorio accessorie);
+
+    void removeAll();
 }

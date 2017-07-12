@@ -38,4 +38,9 @@ public class ProductAppServiceImpl implements ProductAppService {
     public void saveAccessorie(Accesorio accessorie) {
         this.productRepository.storeAccessorie(accessorie);
     }
+
+    @Override
+    public void removeAll() {
+
+    }
 }
