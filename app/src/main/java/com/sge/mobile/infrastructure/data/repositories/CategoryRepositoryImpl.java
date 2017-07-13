@@ -80,4 +80,9 @@ public class CategoryRepositoryImpl extends RepositoryImpl<Rubro> implements Cat
     public Dao<Rubro, Integer> getEntityDao() {
         return categoryDao;
     }
+
+    @Override
+    public void removeAll() {
+        this.removeAll(Rubro.class);
+    }
 }

@@ -3,6 +3,7 @@ package com.sge.mobile.infrastructure.data.core;
 import android.util.Log;
 
 import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.table.TableUtils;
 import com.sge.mobile.domain.core.Entity;
 import com.sge.mobile.domain.core.Repository;
 import com.sge.mobile.infrastructure.data.SGEDBHelper;
@@ -55,6 +56,15 @@ public abstract class RepositoryImpl<TEntity extends Entity> implements Reposito
     public void remove(TEntity item) {
         try {
             this.getEntityDao().delete(item);
+        } catch (SQLException e) {
+            Log.e(TAG, e.getMessage());
+        }
+    }
+
+    @Override
+    public void removeAll(Class<?> dataClass) {
+        try {
+            TableUtils.clearTable(this.sgeDBHelper.getConnectionSource(), dataClass);
         } catch (SQLException e) {
             Log.e(TAG, e.getMessage());
         }

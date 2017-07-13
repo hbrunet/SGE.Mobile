@@ -9,4 +9,6 @@ public interface ProductRepository extends Repository<Producto> {
     Producto GetByDescription(String description);
 
     void storeAccessorie(Accesorio accessorie);
+
+    void removeAll();
 }

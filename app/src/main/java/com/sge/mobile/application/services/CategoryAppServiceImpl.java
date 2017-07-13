@@ -1,6 +1,5 @@
 package com.sge.mobile.application.services;
 
-import com.j256.ormlite.table.TableUtils;
 import com.sge.mobile.domain.model.CategoryRepository;
 import com.sge.mobile.domain.model.Rubro;
 import com.sge.mobile.infrastructure.data.SGEDBHelper;
@@ -48,6 +47,6 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 
     @Override
     public void removeAll() {
-
+        this.categoryRepository.removeAll();
     }
 }

@@ -41,6 +41,6 @@ public class ProductAppServiceImpl implements ProductAppService {
 
     @Override
     public void removeAll() {
-
+        this.productRepository.removeAll();
     }
 }

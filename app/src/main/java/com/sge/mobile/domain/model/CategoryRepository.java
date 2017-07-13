@@ -11,4 +11,6 @@ public interface CategoryRepository extends Repository<Rubro> {
     Rubro getByDescription(String description);
 
     List<Rubro> getActives();
+
+    void removeAll();
 }

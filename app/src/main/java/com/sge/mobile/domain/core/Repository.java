@@ -19,5 +19,7 @@ public interface Repository<TEntity extends Entity> {
 
     void remove(TEntity item);
 
+    void removeAll(Class<?> dataClass);
+
     List<TEntity> getFiltered(PreparedQuery<TEntity> preparedQuery);
 }

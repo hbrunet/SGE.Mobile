@@ -70,4 +70,10 @@ public class ProductRepositoryImpl extends RepositoryImpl<Producto> implements P
     public Dao<Producto, Integer> getEntityDao() {
         return this.productDao;
     }
+
+    @Override
+    public void removeAll() {
+        this.removeAll(Accesorio.class);
+        this.removeAll(Producto.class);
+    }
 }

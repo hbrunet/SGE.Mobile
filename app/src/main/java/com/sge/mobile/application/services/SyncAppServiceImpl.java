@@ -19,11 +19,12 @@ public class SyncAppServiceImpl implements SyncAppService {
     private final SGEOrderServiceAgent sgeOrderServiceAgent;
     private final CategoryAppService categoryAppService;
     private final ProductAppService productAppService;
+    private final SGEDBHelper sgeDBHelper;
 
-    public SyncAppServiceImpl(final SGEDBHelper sgeDBHelper){
+    public SyncAppServiceImpl(final SGEDBHelper sgeDBHelper) {
         if (sgeDBHelper == null)
             throw new IllegalArgumentException();
-
+        this.sgeDBHelper = sgeDBHelper;
         this.sgeOrderServiceAgent = new SGEOrderServiceAgentImpl();
         this.categoryAppService = new CategoryAppServiceImpl(sgeDBHelper);
         this.productAppService = new ProductAppServiceImpl(sgeDBHelper);
@@ -31,7 +32,6 @@ public class SyncAppServiceImpl implements SyncAppService {
 
     @Override
     public void syncData() {
-
         this.productAppService.removeAll();
         this.categoryAppService.removeAll();
 
