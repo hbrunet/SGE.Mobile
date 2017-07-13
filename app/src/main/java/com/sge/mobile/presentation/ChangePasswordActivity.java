@@ -2,6 +2,7 @@ package com.sge.mobile.presentation;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,7 +16,7 @@ import com.sge.mobile.infrastructure.data.SGEDBHelper;
 /**
  * Created by Daniel on 10/04/14.
  */
-public class ChangePasswordActivity extends ActionBarActivity {
+public class ChangePasswordActivity extends AppCompatActivity {
     private SGEDBHelper sgeDBHelper;
     private ConfigurationAppService configurationAppService;
     private TextView txtOldPassword;

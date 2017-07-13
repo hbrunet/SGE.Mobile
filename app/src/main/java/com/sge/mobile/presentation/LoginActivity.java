@@ -2,6 +2,7 @@ package com.sge.mobile.presentation;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
@@ -10,7 +11,7 @@ import android.widget.Toast;
 import com.sge.mobile.domain.core.DomainObjectUtils;
 
 
-public class LoginActivity extends ActionBarActivity {
+public class LoginActivity extends AppCompatActivity {
     private TextView txtUserName;
     private TextView txtPassword;
 

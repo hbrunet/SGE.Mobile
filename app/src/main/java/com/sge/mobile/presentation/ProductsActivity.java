@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class ProductsActivity extends ActionBarActivity {
+public class ProductsActivity extends AppCompatActivity {
     private SGEDBHelper sgeDBHelper;
     private ExpandableListView productsList;
     private CategoryAppService categoryAppService;

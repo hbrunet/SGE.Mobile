@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -25,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class OrderActivity extends ActionBarActivity {
+public class OrderActivity extends AppCompatActivity {
     private Spinner spinnerTables;
     private ListView lvOrderLines;
     private TextView txtObservation;
