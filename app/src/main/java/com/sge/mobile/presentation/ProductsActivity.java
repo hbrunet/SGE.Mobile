@@ -119,7 +119,9 @@ public class ProductsActivity extends AppCompatActivity {
             logOutAsyncTask.execute();
             return true;
         } else if (id == R.id.btnConfig) {
-            ConfigurationDialog configurationDialog = new ConfigurationDialog(this, this.getConfigurationAppService());
+            ConfigurationDialog configurationDialog = new ConfigurationDialog();
+            configurationDialog.setProductsActivity(this);
+            configurationDialog.setConfigurationAppService(this.getConfigurationAppService());
             configurationDialog.show(getSupportFragmentManager(), "ConfigurationDialog");
             return true;
         } else if (id == R.id.btnChangePassword) {
@@ -215,10 +217,10 @@ public class ProductsActivity extends AppCompatActivity {
     }
 
     public void showAccessoriesDialog(Producto product) {
-        //AccessoriesDialog accessoriesDialog = new AccessoriesDialog(product, this);
-        //accessoriesDialog.show(getSupportFragmentManager(), "AccessoriesDialog");
-
-        ProductAccessoriesDialog productAccessoriesDialog = new ProductAccessoriesDialog(product, this);
+        ProductAccessoriesDialog productAccessoriesDialog = new ProductAccessoriesDialog();
+        productAccessoriesDialog.setProduct(product);
+        productAccessoriesDialog.setProductsActivity(this);
+        productAccessoriesDialog.populateSelectedAccessories();
         productAccessoriesDialog.show(getSupportFragmentManager(), "ProductAccessoriesDialog");
     }
 

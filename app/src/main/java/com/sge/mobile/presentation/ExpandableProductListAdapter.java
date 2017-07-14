@@ -98,12 +98,6 @@ public class ExpandableProductListAdapter extends BaseExpandableListAdapter {
         if (product.getAccesorios() == null || product.getAccesorios().size() == 0) {
             imgAccesdories.setVisibility(View.INVISIBLE);
         } else {
-           /* imgAccesdories.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Producto prod = productAppService.findProductByDescription(productName);
-                    ((ProductsActivity) context).showAccessoriesDialog(prod);
-                }
-            });*/
             imgAccesdories.setVisibility(View.VISIBLE);
         }
 

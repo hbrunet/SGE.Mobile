@@ -32,9 +32,17 @@ public class ProductAccessoriesDialog extends DialogFragment {
     private ProductsActivity productsActivity;
     private List<Accesorio> selectedAccessories;
 
-    public ProductAccessoriesDialog(Producto product, ProductsActivity productsActivity) {
+    public ProductAccessoriesDialog() { super(); }
+
+    public void setProduct(Producto product) {
         this.product = product;
+    }
+
+    public void setProductsActivity(ProductsActivity productsActivity) {
         this.productsActivity = productsActivity;
+    }
+
+    public void populateSelectedAccessories(){
         this.selectedAccessories = new ArrayList<Accesorio>();
         for (Accesorio item : this.product.getAccesorios()) {
             if (item.isPorDefecto())
