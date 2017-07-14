@@ -37,7 +37,7 @@ public class Producto extends Entity {
     @DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = RUBRO_ID, canBeNull = false)
     private Rubro rubro;
     @ForeignCollectionField(eager = false, columnName = Accesorio.PRODUCTO_PADRE_ID,
-            orderColumnName = Accesorio.ACCESORIO_ID, orderAscending = true)
+            orderColumnName = Accesorio.ACCESORIO_ID, orderAscending = true, foreignFieldName = "productoPadre")
     private Collection<Accesorio> accesorios;
 
     public Producto() {
