@@ -14,4 +14,7 @@
     <item
         android:id="@+id/btnConfig"
         android:title="Configuración" />
+    <item
+        android:id="@+id/btnViewOrdersTable"
+        android:title="Consultar Pedidos Mesa" />
 </menu>

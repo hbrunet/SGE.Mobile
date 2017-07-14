@@ -32,6 +32,10 @@
             android:name="com.sge.mobile.presentation.ChangePasswordActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_change_password"></activity>
+        <activity
+            android:name="com.sge.mobile.presentation.TableOrdersActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/title_activity_table_orders"></activity>
     </application>
 
 </manifest>

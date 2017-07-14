@@ -128,6 +128,10 @@ public class ProductsActivity extends AppCompatActivity {
             Intent intent = new Intent(this, ChangePasswordActivity.class);
             startActivity(intent);
             return true;
+        } else if (id == R.id.btnViewOrdersTable) {
+            Intent intent = new Intent(this, TableOrdersActivity.class);
+            startActivity(intent);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
