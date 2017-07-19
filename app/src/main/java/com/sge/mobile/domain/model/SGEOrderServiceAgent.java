@@ -24,4 +24,8 @@ public interface SGEOrderServiceAgent {
     void sendOrder(int waiter, int table, String order, String notes, String serviceUrl);
 
     boolean testConnection(String serviceUrl);
+
+    void getTableOrders(int table);
+
+    void changeUserPassword(String user, String oldPassword, String newPassword);
 }

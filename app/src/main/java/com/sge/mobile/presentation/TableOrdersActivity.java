@@ -1,20 +1,16 @@
 package com.sge.mobile.presentation;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.sge.mobile.domain.model.LineaPedido;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +19,7 @@ import java.util.List;
  */
 public class TableOrdersActivity extends AppCompatActivity {
     private Spinner spinnerTables;
-    private ListView lvOrderLines;
-    private TextView lblTotalPrice;
+    private ListView lvOrders;
 
 
     @Override
@@ -34,11 +29,12 @@ public class TableOrdersActivity extends AppCompatActivity {
         this.setTitle(this.getString(R.string.title_activity_table_orders)
                 + " - " + UserSession.getInstance().getUserName());
         this.spinnerTables = (Spinner) findViewById(R.id.spinnerTables);
-        this.lvOrderLines = (ListView) findViewById(R.id.lvOrderLines);
-        this.lblTotalPrice = (TextView) findViewById(R.id.lblTotalPrice);
+        this.lvOrders = (ListView) findViewById(R.id.lvOrders);
         this.populateTables();
-        this.polulateOrderLines();
-        this.setTotalPrice();
+    }
+
+    public void searchOrders(View button) {
+        polulateOrders();
     }
 
     public void populateTables() {
@@ -74,38 +70,20 @@ public class TableOrdersActivity extends AppCompatActivity {
         });
     }
 
-    private void polulateOrderLines() {
+    private void polulateOrders() {
         try {
-            this.lvOrderLines.setAdapter(new GenericAdapter(this, R.layout.order_line_row,
+            this.lvOrders.setAdapter(new GenericAdapter(this, R.layout.order_row,
                     new ArrayList<LineaPedido>(UserSession.getInstance().getOrder().getLineasPedido())) {
                 @Override
                 public void onItem(Object item, final View view) {
                     final LineaPedido orderLine = (LineaPedido) item;
                     if (item != null) {
                         TextView lblProduct = (TextView) view.findViewById(R.id.lblProduct);
-                        TextView lblAccessories = (TextView) view.findViewById(R.id.lblAccessories);
-                        //TextView lblPrice = (TextView) view.findViewById(R.id.lblPrice);
-                        ImageButton btnRemove = (ImageButton) view.findViewById(R.id.btnRemove);
+                        TextView lblQuantity = (TextView) view.findViewById(R.id.lblQuantity);
                         if (lblProduct != null)
                             lblProduct.setText(orderLine.getDescripcionProducto());
-                        if (lblAccessories != null)
-                            lblAccessories.setText(orderLine.getDescripcionAccesorios());
-                        /*if (lblPrice != null) {
-                            DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
-                            decimalFormatSymbols.setDecimalSeparator(',');
-                            decimalFormatSymbols.setGroupingSeparator('.');
-                            DecimalFormat decimalFormat = new DecimalFormat("#.00", decimalFormatSymbols);
-                            lblPrice.setText("[$ " + decimalFormat.format(orderLine.getPrecioProducto()) + "]");
-                        }*/
-                        if (btnRemove != null) {
-                            btnRemove.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    UserSession.getInstance().getOrder().getLineasPedido().remove(orderLine);
-                                    polulateOrderLines();
-                                    setTotalPrice();
-                                }
-                            });
+                        if (lblQuantity != null) {
+                            lblQuantity.setText("[" + 1 + "]");
                         }
                     }
                 }
@@ -115,12 +93,4 @@ public class TableOrdersActivity extends AppCompatActivity {
         }
     }
 
-    private void setTotalPrice() {
-        DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
-        decimalFormatSymbols.setDecimalSeparator(',');
-        decimalFormatSymbols.setGroupingSeparator('.');
-        DecimalFormat decimalFormat = new DecimalFormat("0.00", decimalFormatSymbols);
-        this.lblTotalPrice.setText("TOTAL A PAGAR: [$ "
-                + decimalFormat.format(UserSession.getInstance().getOrder().getPrecioTotal()) + "]");
-    }
 }

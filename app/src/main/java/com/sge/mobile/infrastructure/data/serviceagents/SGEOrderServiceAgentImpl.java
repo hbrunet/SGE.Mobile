@@ -276,4 +276,14 @@ public class SGEOrderServiceAgentImpl implements SGEOrderServiceAgent {
             return false;
         }
     }
+
+    @Override
+    public void getTableOrders(int table) {
+
+    }
+
+    @Override
+    public void changeUserPassword(String user, String oldPassword, String newPassword) {
+
+    }
 }

@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.sge.mobile.presentation.OrderActivity">
+    tools:context="com.sge.mobile.presentation.TableOrdersActivity">
 
     <Spinner
         android:id="@+id/spinnerTables"
@@ -21,25 +21,24 @@
         android:fontFamily="sans-serif"
         android:spinnerMode="dialog" />
 
+    <Button
+        android:id="@+id/btnSearchOrders"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="4dp"
+        android:fontFamily="sans-serif"
+        android:onClick="searchOrders"
+        android:text="Buscar Pedidos" />
+
     <ListView
-        android:id="@+id/lvOrderLines"
+        android:id="@+id/lvOrders"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:layout_marginTop="4dp"
         android:layout_weight="1"
         android:fontFamily="sans-serif" />
-
-    <TextView
-        android:id="@+id/lblTotalPrice"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="4dp"
-        android:fontFamily="sans-serif"
-        android:gravity="right"
-        android:text="TOTAL A PAGAR: [$ 100,00]"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>

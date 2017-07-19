@@ -21,7 +21,9 @@ public class ConfigurationDialog extends DialogFragment {
     private ProductsActivity productsActivity;
     private ConfigurationAppService configurationAppService;
 
-    public ConfigurationDialog() { super(); }
+    public ConfigurationDialog() {
+        super();
+    }
 
     public void setProductsActivity(ProductsActivity productsActivity) {
         this.productsActivity = productsActivity;
