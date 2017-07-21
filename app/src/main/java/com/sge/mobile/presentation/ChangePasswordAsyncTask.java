@@ -42,23 +42,19 @@ public class ChangePasswordAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... params) {
-        boolean result;
+        boolean result = false;
         try {
             if (!UserSession.getInstance().isAdministrator()) {
                 int i = 0;
                 do {
                     this.connected = this.sgeOrderServiceAgent.testConnection(UserSession.getInstance().getSgeServiceUrl());
                     if (connected) {
-                        // todo: llamar al metodo del servicio para cambiar el password
-                    /*this.sgeOrderServiceAgent.sendOrder(UserSession.getInstance().getUserId(),
-                            UserSession.getInstance().getOrder().getNroMesa(),
-                            UserSession.getInstance().getOrder().toString(),
-                            UserSession.getInstance().getOrder().getObservacion(),
-                            UserSession.getInstance().getSgeServiceUrl());*/
+                        result = this.sgeOrderServiceAgent.changeUserPassword(UserSession.getInstance().getUserName(),
+                                UserSession.getInstance().getPassword(), newPassword,
+                                UserSession.getInstance().getSgeServiceUrl());
                     }
                     i++;
                 } while (!this.connected && i <= 10);
-                result = !DomainObjectUtils.textHasContent(this.errorMessage);
             } else {
                 Configuracion config = configurationAppService.findFirst();
                 config.setClaveAdministrador(newPassword);
@@ -67,7 +63,6 @@ public class ChangePasswordAsyncTask extends AsyncTask<Void, Void, Boolean> {
             }
         } catch (Exception e) {
             errorMessage = e.getMessage();
-            result = false;
         }
         return result;
     }

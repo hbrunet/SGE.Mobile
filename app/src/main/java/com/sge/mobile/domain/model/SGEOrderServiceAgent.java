@@ -27,5 +27,5 @@ public interface SGEOrderServiceAgent {
 
     void getTableOrders(int table);
 
-    void changeUserPassword(String user, String oldPassword, String newPassword);
+    boolean changeUserPassword(String user, String oldPassword, String newPassword, String serviceUrl);
 }

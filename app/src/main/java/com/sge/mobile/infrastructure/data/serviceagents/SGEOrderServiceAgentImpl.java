@@ -283,7 +283,31 @@ public class SGEOrderServiceAgentImpl implements SGEOrderServiceAgent {
     }
 
     @Override
-    public void changeUserPassword(String user, String oldPassword, String newPassword) {
+    public boolean changeUserPassword(String user, String oldPassword, String newPassword, String serviceUrl) {
+        final String NAMESPACE = "http://SGE.Service.Contracts.Service";
+        final String URL = serviceUrl;
+        final String METHOD_NAME = "ChangePassword";
+        final String SOAP_ACTION = "http://SGE.Service.Contracts.Service/IOrderService/ChangePassword";
 
+        try {
+            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+
+            request.addProperty("user", user);
+            request.addProperty("oldPassword", oldPassword);
+            request.addProperty("newPassword", newPassword);
+
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                    SoapEnvelope.VER11);
+            envelope.dotNet = true;
+            envelope.setOutputSoapObject(request);
+
+            HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
+            androidHttpTransport.debug = true;
+            androidHttpTransport.call(SOAP_ACTION, envelope);
+            SoapPrimitive result = (SoapPrimitive) envelope.getResponse();
+            return Boolean.parseBoolean(result.toString());
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
