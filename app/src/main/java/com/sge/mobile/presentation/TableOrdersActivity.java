@@ -80,10 +80,19 @@ public class TableOrdersActivity extends AppCompatActivity {
                     if (item != null) {
                         TextView lblProduct = (TextView) view.findViewById(R.id.lblProduct);
                         TextView lblQuantity = (TextView) view.findViewById(R.id.lblQuantity);
+                        TextView lblAccessories = (TextView) view.findViewById(R.id.lblAccessories);
+                        TextView lblDate = (TextView) view.findViewById(R.id.lblDate);
+
                         if (lblProduct != null)
                             lblProduct.setText(orderLine.getDescripcionProducto());
                         if (lblQuantity != null) {
                             lblQuantity.setText("[" + 1 + "]");
+                        }
+                        if (lblAccessories != null) {
+                            lblAccessories.setText(orderLine.getDescripcionAccesorios());
+                        }
+                        if (lblDate != null) {
+                            lblDate.setText("[" + 1 + "]");
                         }
                     }
                 }

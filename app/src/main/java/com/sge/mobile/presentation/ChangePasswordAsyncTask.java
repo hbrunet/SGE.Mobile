@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.sge.mobile.application.services.ConfigurationAppService;
-import com.sge.mobile.domain.core.DomainObjectUtils;
 import com.sge.mobile.domain.model.Configuracion;
 import com.sge.mobile.domain.model.SGEOrderServiceAgent;
 import com.sge.mobile.infrastructure.data.serviceagents.SGEOrderServiceAgentImpl;
