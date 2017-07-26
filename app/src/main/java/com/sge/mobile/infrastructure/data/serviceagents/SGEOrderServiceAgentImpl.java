@@ -5,6 +5,7 @@ import com.sge.mobile.application.services.CategoryAppService;
 import com.sge.mobile.application.services.ProductAppService;
 import com.sge.mobile.domain.model.Accesorio;
 import com.sge.mobile.domain.model.Producto;
+import com.sge.mobile.domain.model.ResumenMesa;
 import com.sge.mobile.domain.model.Rubro;
 import com.sge.mobile.domain.model.SGEOrderServiceAgent;
 
@@ -278,11 +279,6 @@ public class SGEOrderServiceAgentImpl implements SGEOrderServiceAgent {
     }
 
     @Override
-    public void getTableOrders(int table) {
-
-    }
-
-    @Override
     public boolean changeUserPassword(String user, String oldPassword, String newPassword, String serviceUrl) {
         final String NAMESPACE = "http://SGE.Service.Contracts.Service";
         final String URL = serviceUrl;
@@ -309,5 +305,35 @@ public class SGEOrderServiceAgentImpl implements SGEOrderServiceAgent {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @Override
+    public ResumenMesa getTableStatus(int waiter, int table, String serviceUrl) {
+        final String NAMESPACE = "http://SGE.Service.Contracts.Service";
+        final String URL = serviceUrl;
+        final String METHOD_NAME = "GetTableStatus";
+        final String SOAP_ACTION = "http://SGE.Service.Contracts.Service/IOrderService/GetTableStatus";
+
+        try {
+            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+
+            request.addProperty("waiter", waiter);
+            request.addProperty("table", table);
+
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                    SoapEnvelope.VER11);
+            envelope.dotNet = true;
+            envelope.setOutputSoapObject(request);
+
+            HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
+            androidHttpTransport.debug = true;
+            androidHttpTransport.call(SOAP_ACTION, envelope);
+            SoapObject soapObject = (SoapObject) envelope.getResponse();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return null;
     }
 }

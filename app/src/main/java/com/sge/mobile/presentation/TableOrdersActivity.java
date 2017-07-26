@@ -10,6 +10,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.sge.mobile.domain.model.LineaPedido;
+import com.sge.mobile.domain.model.ResumenMesa;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.List;
 public class TableOrdersActivity extends AppCompatActivity {
     private Spinner spinnerTables;
     private ListView lvOrders;
-
+    private int tableNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +60,7 @@ public class TableOrdersActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedTable = spinnerTables.getSelectedItem().toString();
-                int tableNumber = Integer.parseInt(selectedTable.substring(selectedTable.indexOf("-") + 2));
-                UserSession.getInstance().getOrder().setNroMesa(tableNumber);
+                tableNumber = Integer.parseInt(selectedTable.substring(selectedTable.indexOf("-") + 2));
             }
 
             @Override
@@ -72,7 +72,10 @@ public class TableOrdersActivity extends AppCompatActivity {
 
     private void polulateOrders() {
         try {
-            this.lvOrders.setAdapter(new GenericAdapter(this, R.layout.order_row,
+
+            GetTableStatusAsyncTask getTableStatusAsyncTask = new GetTableStatusAsyncTask(TableOrdersActivity.this, tableNumber);
+            getTableStatusAsyncTask.execute();
+            /*this.lvOrders.setAdapter(new GenericAdapter(this, R.layout.order_row,
                     new ArrayList<LineaPedido>(UserSession.getInstance().getOrder().getLineasPedido())) {
                 @Override
                 public void onItem(Object item, final View view) {
@@ -96,7 +99,7 @@ public class TableOrdersActivity extends AppCompatActivity {
                         }
                     }
                 }
-            });
+            });*/
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
