@@ -6,6 +6,7 @@ import com.sge.mobile.application.services.ProductAppService;
 import com.sge.mobile.domain.model.Accesorio;
 import com.sge.mobile.domain.model.Producto;
 import com.sge.mobile.domain.model.ResumenMesa;
+import com.sge.mobile.domain.model.ResumenMesaDetalle;
 import com.sge.mobile.domain.model.Rubro;
 import com.sge.mobile.domain.model.SGEOrderServiceAgent;
 
@@ -324,6 +325,8 @@ public class SGEOrderServiceAgentImpl implements SGEOrderServiceAgent {
                     SoapEnvelope.VER11);
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
+            //envelope.addMapping(NAMESPACE, "ResumenMesaSvc", ResumenMesa.class);
+            //envelope.addMapping(NAMESPACE, "ResumenMesaDetalleSvc", ResumenMesaDetalle.class);
 
             HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
             androidHttpTransport.debug = true;
