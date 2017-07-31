@@ -325,14 +325,17 @@ public class SGEOrderServiceAgentImpl implements SGEOrderServiceAgent {
                     SoapEnvelope.VER11);
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
-            //envelope.addMapping(NAMESPACE, "ResumenMesaSvc", ResumenMesa.class);
-            //envelope.addMapping(NAMESPACE, "ResumenMesaDetalleSvc", ResumenMesaDetalle.class);
 
             HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
             androidHttpTransport.debug = true;
             androidHttpTransport.call(SOAP_ACTION, envelope);
             SoapObject soapObject = (SoapObject) envelope.getResponse();
-
+            ResumenMesa resumenMesa = new ResumenMesa();
+            resumenMesa.setCantidadPedidos(Integer.parseInt(soapObject.getProperty(0).toString()));
+            if (soapObject.getProperty(2) != null)
+                resumenMesa.setError(soapObject.getProperty(2).toString());
+            resumenMesa.setValida(Boolean.parseBoolean(soapObject.getProperty(3).toString()));
+            return resumenMesa;
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
