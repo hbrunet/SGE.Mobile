@@ -120,7 +120,7 @@ public class OrderActivity extends AppCompatActivity {
     private void polulateOrderLines() {
         try {
             this.lvOrderLines.setAdapter(new GenericAdapter(this, R.layout.order_line_row,
-                    new ArrayList<LineaPedido>(UserSession.getInstance().getOrder().getLineasPedido())) {
+                    new ArrayList<>(UserSession.getInstance().getOrder().getLineasPedido())) {
                 @Override
                 public void onItem(Object item, final View view) {
                     final LineaPedido orderLine = (LineaPedido) item;

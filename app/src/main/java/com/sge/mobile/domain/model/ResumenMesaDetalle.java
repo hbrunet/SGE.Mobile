@@ -1,10 +1,5 @@
 package com.sge.mobile.domain.model;
 
-import org.ksoap2.serialization.KvmSerializable;
-import org.ksoap2.serialization.PropertyInfo;
-
-import java.util.Hashtable;
-
 /**
  * Created by DEVNET on 26/07/2017.
  */
@@ -18,7 +13,7 @@ public class ResumenMesaDetalle {
     private boolean anulado;
     private boolean modificado;
 
-    public ResumenMesaDetalle(){
+    public ResumenMesaDetalle() {
         anulado = false;
         modificado = false;
     }

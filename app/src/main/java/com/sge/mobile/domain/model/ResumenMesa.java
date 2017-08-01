@@ -1,12 +1,6 @@
 package com.sge.mobile.domain.model;
 
-import com.sge.mobile.domain.core.Entity;
-
-import org.ksoap2.serialization.KvmSerializable;
-import org.ksoap2.serialization.PropertyInfo;
-
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 
 /**
@@ -19,8 +13,8 @@ public class ResumenMesa {
     private String error;
     private boolean valida;
 
-    public ResumenMesa(){
-        detalle = new ArrayList<ResumenMesaDetalle>();
+    public ResumenMesa() {
+        detalle = new ArrayList<>();
         valida = false;
     }
 

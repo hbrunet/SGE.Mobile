@@ -331,15 +331,29 @@ public class SGEOrderServiceAgentImpl implements SGEOrderServiceAgent {
             androidHttpTransport.call(SOAP_ACTION, envelope);
             SoapObject soapObject = (SoapObject) envelope.getResponse();
             ResumenMesa resumenMesa = new ResumenMesa();
-            resumenMesa.setCantidadPedidos(Integer.parseInt(soapObject.getProperty(0).toString()));
-            if (soapObject.getProperty(2) != null)
-                resumenMesa.setError(soapObject.getProperty(2).toString());
-            resumenMesa.setValida(Boolean.parseBoolean(soapObject.getProperty(3).toString()));
+            resumenMesa.setCantidadPedidos(Integer.parseInt(soapObject.getPrimitivePropertyAsString("CantidadPedidos")));
+            resumenMesa.setError(soapObject.getPrimitivePropertyAsString("Error"));
+            resumenMesa.setValida(Boolean.parseBoolean(soapObject.getPrimitivePropertyAsString("EsValida")));
+            if (resumenMesa.isValida()) {
+                SoapObject detalle = (SoapObject) soapObject.getProperty("Detalle");
+                for (int i = 0; i < detalle.getPropertyCount(); i++) {
+                    SoapObject ic = (SoapObject) detalle.getProperty(i);
+                    ResumenMesaDetalle resumenMesaDetalle = new ResumenMesaDetalle();
+                    resumenMesaDetalle.setDescripcion(ic.getPrimitivePropertyAsString("Descripcion"));
+                    resumenMesaDetalle.setPedidoId(Integer.parseInt(ic.getPrimitivePropertyAsString("PedidoId")));
+                    resumenMesaDetalle.setCantidad(ic.getPrimitivePropertyAsString("Cantidad"));
+                    resumenMesaDetalle.setFecha(ic.getPrimitivePropertyAsString("Fecha"));
+                    resumenMesaDetalle.setAccesorios(ic.getPrimitivePropertyAsString("Accesorios"));
+                    resumenMesaDetalle.setAnulado(Boolean.parseBoolean(ic.getPrimitivePropertyAsString("Anulado")));
+                    resumenMesaDetalle.setModificado(Boolean.parseBoolean(ic.getPrimitivePropertyAsString("Modificado")));
+
+                    resumenMesa.getDetalle().add(resumenMesaDetalle);
+                }
+            }
             return resumenMesa;
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
         return null;
     }
 }

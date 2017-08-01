@@ -9,8 +9,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.sge.mobile.domain.model.LineaPedido;
 import com.sge.mobile.domain.model.ResumenMesa;
+import com.sge.mobile.domain.model.ResumenMesaDetalle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,8 @@ public class TableOrdersActivity extends AppCompatActivity {
     }
 
     public void searchOrders(View button) {
-        polulateOrders();
+        GetTableStatusAsyncTask getTableStatusAsyncTask = new GetTableStatusAsyncTask(TableOrdersActivity.this, tableNumber);
+        getTableStatusAsyncTask.execute();
     }
 
     public void populateTables() {
@@ -70,16 +71,13 @@ public class TableOrdersActivity extends AppCompatActivity {
         });
     }
 
-    private void polulateOrders() {
+    public void polulateOrders(final ResumenMesa resumenMesa) {
         try {
-
-            GetTableStatusAsyncTask getTableStatusAsyncTask = new GetTableStatusAsyncTask(TableOrdersActivity.this, tableNumber);
-            getTableStatusAsyncTask.execute();
-            /*this.lvOrders.setAdapter(new GenericAdapter(this, R.layout.order_row,
-                    new ArrayList<LineaPedido>(UserSession.getInstance().getOrder().getLineasPedido())) {
+            this.lvOrders.setAdapter(new GenericAdapter(this, R.layout.order_row,
+                    new ArrayList<>(resumenMesa.getDetalle())) {
                 @Override
                 public void onItem(Object item, final View view) {
-                    final LineaPedido orderLine = (LineaPedido) item;
+                    final ResumenMesaDetalle resumenMesaDetalle = (ResumenMesaDetalle) item;
                     if (item != null) {
                         TextView lblProduct = (TextView) view.findViewById(R.id.lblProduct);
                         TextView lblQuantity = (TextView) view.findViewById(R.id.lblQuantity);
@@ -87,19 +85,19 @@ public class TableOrdersActivity extends AppCompatActivity {
                         TextView lblDate = (TextView) view.findViewById(R.id.lblDate);
 
                         if (lblProduct != null)
-                            lblProduct.setText(orderLine.getDescripcionProducto());
+                            lblProduct.setText(resumenMesaDetalle.getDescripcion());
                         if (lblQuantity != null) {
-                            lblQuantity.setText("[" + 1 + "]");
+                            lblQuantity.setText(String.format("[%s]", resumenMesaDetalle.getCantidad()));
                         }
                         if (lblAccessories != null) {
-                            lblAccessories.setText(orderLine.getDescripcionAccesorios());
+                            lblAccessories.setText(resumenMesaDetalle.getAccesorios());
                         }
                         if (lblDate != null) {
-                            lblDate.setText("[" + 1 + "]");
+                            lblDate.setText(resumenMesaDetalle.getFecha());
                         }
                     }
                 }
-            });*/
+            });
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }

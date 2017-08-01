@@ -12,7 +12,7 @@ public class Pedido {
     private List<LineaPedido> lineasPedido;
 
     public Pedido() {
-        this.lineasPedido = new ArrayList<LineaPedido>();
+        this.lineasPedido = new ArrayList<>();
     }
 
     public int getNroMesa() {
