@@ -79,31 +79,34 @@ public class TableOrdersActivity extends AppCompatActivity {
                     new ArrayList<>(resumenMesa.getDetalle())) {
                 @Override
                 public void onItem(Object item, final View view) {
-                    final ResumenMesaDetalle resumenMesaDetalle = (ResumenMesaDetalle) item;
                     if (item != null) {
-                        TextView lblProduct = (TextView) view.findViewById(R.id.lblProduct);
+                        ResumenMesaDetalle resumenMesaDetalle = (ResumenMesaDetalle) item;
+                        TextView lblProduct = (TextView) view.findViewById(R.id.lblProd);
                         TextView lblQuantity = (TextView) view.findViewById(R.id.lblQuantity);
-                        TextView lblAccessories = (TextView) view.findViewById(R.id.lblAccessories);
+                        TextView lblAccessories = (TextView) view.findViewById(R.id.lblAcces);
                         TextView lblDate = (TextView) view.findViewById(R.id.lblDate);
 
                         if (lblProduct != null) {
                             if (resumenMesaDetalle.isAnulado()) {
                                 lblProduct.setPaintFlags(lblProduct.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                            }
-                            if (resumenMesaDetalle.isModificado()) {
+                            } else if (resumenMesaDetalle.isModificado()) {
                                 lblProduct.setTextColor(Color.parseColor("#03A9F4"));
+                            } else {
+                                lblProduct.setPaintFlags(lblProduct.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                             }
                             lblProduct.setText(resumenMesaDetalle.getDescripcion());
                         }
+
                         if (lblQuantity != null) {
                             lblQuantity.setText(String.format("[ %s ]", resumenMesaDetalle.getCantidad()));
                         }
                         if (lblAccessories != null) {
                             if (resumenMesaDetalle.isAnulado()) {
                                 lblAccessories.setPaintFlags(lblAccessories.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                            }
-                            if (resumenMesaDetalle.isModificado()) {
+                            } else if (resumenMesaDetalle.isModificado()) {
                                 lblAccessories.setTextColor(Color.parseColor("#4FC3F7"));
+                            } else {
+                                lblAccessories.setPaintFlags(lblAccessories.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                             }
                             lblAccessories.setText(resumenMesaDetalle.getAccesorios());
                         }
