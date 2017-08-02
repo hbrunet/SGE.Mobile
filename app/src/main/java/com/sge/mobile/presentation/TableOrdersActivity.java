@@ -1,5 +1,7 @@
 package com.sge.mobile.presentation;
 
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -84,12 +86,25 @@ public class TableOrdersActivity extends AppCompatActivity {
                         TextView lblAccessories = (TextView) view.findViewById(R.id.lblAccessories);
                         TextView lblDate = (TextView) view.findViewById(R.id.lblDate);
 
-                        if (lblProduct != null)
+                        if (lblProduct != null) {
+                            if (resumenMesaDetalle.isAnulado()) {
+                                lblProduct.setPaintFlags(lblProduct.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                            }
+                            if (resumenMesaDetalle.isModificado()) {
+                                lblProduct.setTextColor(Color.parseColor("#03A9F4"));
+                            }
                             lblProduct.setText(resumenMesaDetalle.getDescripcion());
+                        }
                         if (lblQuantity != null) {
-                            lblQuantity.setText(String.format("[%s]", resumenMesaDetalle.getCantidad()));
+                            lblQuantity.setText(String.format("[ %s ]", resumenMesaDetalle.getCantidad()));
                         }
                         if (lblAccessories != null) {
+                            if (resumenMesaDetalle.isAnulado()) {
+                                lblAccessories.setPaintFlags(lblAccessories.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                            }
+                            if (resumenMesaDetalle.isModificado()) {
+                                lblAccessories.setTextColor(Color.parseColor("#4FC3F7"));
+                            }
                             lblAccessories.setText(resumenMesaDetalle.getAccesorios());
                         }
                         if (lblDate != null) {
