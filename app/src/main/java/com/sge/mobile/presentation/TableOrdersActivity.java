@@ -89,8 +89,6 @@ public class TableOrdersActivity extends AppCompatActivity {
                         if (lblProduct != null) {
                             if (resumenMesaDetalle.isAnulado()) {
                                 lblProduct.setPaintFlags(lblProduct.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                            } else if (resumenMesaDetalle.isModificado()) {
-                                lblProduct.setTextColor(Color.parseColor("#03A9F4"));
                             } else {
                                 lblProduct.setPaintFlags(lblProduct.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                             }
@@ -103,8 +101,6 @@ public class TableOrdersActivity extends AppCompatActivity {
                         if (lblAccessories != null) {
                             if (resumenMesaDetalle.isAnulado()) {
                                 lblAccessories.setPaintFlags(lblAccessories.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                            } else if (resumenMesaDetalle.isModificado()) {
-                                lblAccessories.setTextColor(Color.parseColor("#4FC3F7"));
                             } else {
                                 lblAccessories.setPaintFlags(lblAccessories.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                             }
