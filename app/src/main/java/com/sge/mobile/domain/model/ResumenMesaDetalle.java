@@ -12,6 +12,7 @@ public class ResumenMesaDetalle {
     private String fecha;
     private boolean anulado;
     private boolean modificado;
+    private boolean descargado;
 
     public ResumenMesaDetalle() {
         anulado = false;
@@ -72,5 +73,13 @@ public class ResumenMesaDetalle {
 
     public void setModificado(boolean modificado) {
         this.modificado = modificado;
+    }
+
+    public boolean isDescargado() {
+        return descargado;
+    }
+
+    public void setDescargado(boolean descargado) {
+        this.descargado = descargado;
     }
 }

@@ -346,6 +346,7 @@ public class SGEOrderServiceAgentImpl implements SGEOrderServiceAgent {
                     resumenMesaDetalle.setAccesorios(ic.getPrimitivePropertyAsString("Accesorios"));
                     resumenMesaDetalle.setAnulado(Boolean.parseBoolean(ic.getPrimitivePropertyAsString("Anulado")));
                     resumenMesaDetalle.setModificado(Boolean.parseBoolean(ic.getPrimitivePropertyAsString("Modificado")));
+                    resumenMesaDetalle.setDescargado(Boolean.parseBoolean(ic.getPrimitivePropertyAsString("Descargado")));
 
                     resumenMesa.getDetalle().add(resumenMesaDetalle);
                 }

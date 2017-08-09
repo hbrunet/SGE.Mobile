@@ -92,6 +92,11 @@ public class TableOrdersActivity extends AppCompatActivity {
                             } else {
                                 lblProduct.setPaintFlags(lblProduct.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                             }
+                            if (resumenMesaDetalle.isDescargado()){
+                                lblProduct.setTextColor(Color.YELLOW);
+                            } else {
+                                lblProduct.setTextColor(Color.YELLOW);
+                            }
                             lblProduct.setText(resumenMesaDetalle.getDescripcion());
                         }
 
