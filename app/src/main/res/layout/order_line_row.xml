@@ -23,7 +23,6 @@
             android:ellipsize="end"
             android:fontFamily="sans-serif"
             android:maxLines="2"
-            android:singleLine="false"
             android:text="Producto"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="?android:textColorPrimary" />
@@ -36,7 +35,6 @@
             android:ellipsize="end"
             android:fontFamily="sans-serif"
             android:maxLines="3"
-            android:singleLine="false"
             android:text="Accesorios"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:textColorSecondary" />

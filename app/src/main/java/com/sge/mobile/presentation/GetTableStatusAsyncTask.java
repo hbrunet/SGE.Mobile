@@ -65,6 +65,8 @@ public class GetTableStatusAsyncTask extends AsyncTask<Void, Void, ResumenMesa> 
                 showToast(resumenMesa.getError());
             }
             ((TableOrdersActivity) activity).polulateOrders(resumenMesa);
+            ((TableOrdersActivity) activity).lblOrdersCount.setText(String.format("Cantidad de Pedidos: %d",
+                    resumenMesa.getCantidadPedidos()));
         } else {
             showToast("Error: No fue posible establecer conexión con el servicio SGE. " +
                     "\nAsegúrese de tener habilitada la conexion Wi-Fi y vuela a intentarlo.");

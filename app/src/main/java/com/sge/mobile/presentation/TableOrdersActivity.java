@@ -1,9 +1,12 @@
 package com.sge.mobile.presentation;
 
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,6 +24,7 @@ import java.util.List;
  * Created by Daniel on 17/04/14.
  */
 public class TableOrdersActivity extends AppCompatActivity {
+    public TextView lblOrdersCount;
     private Spinner spinnerTables;
     private ListView lvOrders;
     private int tableNumber;
@@ -33,6 +37,7 @@ public class TableOrdersActivity extends AppCompatActivity {
                 + " - " + UserSession.getInstance().getUserName());
         this.spinnerTables = (Spinner) findViewById(R.id.spinnerTables);
         this.lvOrders = (ListView) findViewById(R.id.lvOrders);
+        this.lblOrdersCount = (TextView) findViewById(R.id.lblOrdersCount);
         this.populateTables();
     }
 
@@ -85,6 +90,11 @@ public class TableOrdersActivity extends AppCompatActivity {
                         TextView lblQuantity = (TextView) view.findViewById(R.id.lblQuantity);
                         TextView lblAccessories = (TextView) view.findViewById(R.id.lblAcces);
                         TextView lblDate = (TextView) view.findViewById(R.id.lblDate);
+                        TextView lblOrderId = (TextView) view.findViewById(R.id.lblOrderId);
+
+                        if (lblOrderId != null) {
+                            lblOrderId.setText(String.format("P-%d", resumenMesaDetalle.getPedidoId()));
+                        }
 
                         if (lblProduct != null) {
                             if (resumenMesaDetalle.isAnulado()) {
@@ -92,10 +102,10 @@ public class TableOrdersActivity extends AppCompatActivity {
                             } else {
                                 lblProduct.setPaintFlags(lblProduct.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                             }
-                            if (resumenMesaDetalle.isDescargado()){
-                                lblProduct.setTextColor(Color.YELLOW);
+                            if (resumenMesaDetalle.isDescargado()) {
+                                lblProduct.setTextColor(Color.parseColor("#FDD835"));
                             } else {
-                                lblProduct.setTextColor(Color.YELLOW);
+                                lblProduct.setTextColor(getTextColorOfTheme(android.R.attr.textColorPrimary));
                             }
                             lblProduct.setText(resumenMesaDetalle.getDescripcion());
                         }
@@ -108,6 +118,11 @@ public class TableOrdersActivity extends AppCompatActivity {
                                 lblAccessories.setPaintFlags(lblAccessories.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                             } else {
                                 lblAccessories.setPaintFlags(lblAccessories.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                            }
+                            if (resumenMesaDetalle.isDescargado()) {
+                                lblAccessories.setTextColor(Color.parseColor("#F9A825"));
+                            } else {
+                                lblAccessories.setTextColor(getTextColorOfTheme(android.R.attr.textColorSecondary));
                             }
                             lblAccessories.setText(resumenMesaDetalle.getAccesorios());
                         }
@@ -122,4 +137,15 @@ public class TableOrdersActivity extends AppCompatActivity {
         }
     }
 
+    private int getTextColorOfTheme(int colorCoode) {
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = this.getTheme();
+        theme.resolveAttribute(colorCoode, typedValue, true);
+        TypedArray arr =
+                this.obtainStyledAttributes(typedValue.data, new int[]{
+                        colorCoode});
+        int color = arr.getColor(0, -1);
+        arr.recycle();
+        return color;
+    }
 }

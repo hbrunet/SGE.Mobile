@@ -32,12 +32,24 @@
         android:onClick="searchOrders"
         android:text="Buscar Pedidos" />
 
+    <TextView
+        android:id="@+id/lblOrdersCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="sans-serif"
+        android:paddingLeft="10dp"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="?android:textColorPrimary" />
+
     <ListView
         android:id="@+id/lvOrders"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
         android:layout_weight="1"
         android:fontFamily="sans-serif" />
 
