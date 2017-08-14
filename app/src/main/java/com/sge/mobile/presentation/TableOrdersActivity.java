@@ -93,7 +93,7 @@ public class TableOrdersActivity extends AppCompatActivity {
                         TextView lblOrderId = (TextView) view.findViewById(R.id.lblOrderId);
 
                         if (lblOrderId != null) {
-                            lblOrderId.setText(String.format("P-%d", resumenMesaDetalle.getPedidoId()));
+                            lblOrderId.setText(Integer.toString(resumenMesaDetalle.getPedidoId()));
                         }
 
                         if (lblProduct != null) {
@@ -137,13 +137,13 @@ public class TableOrdersActivity extends AppCompatActivity {
         }
     }
 
-    private int getTextColorOfTheme(int colorCoode) {
+    private int getTextColorOfTheme(int colorCode) {
         TypedValue typedValue = new TypedValue();
         Resources.Theme theme = this.getTheme();
-        theme.resolveAttribute(colorCoode, typedValue, true);
+        theme.resolveAttribute(colorCode, typedValue, true);
         TypedArray arr =
                 this.obtainStyledAttributes(typedValue.data, new int[]{
-                        colorCoode});
+                        colorCode});
         int color = arr.getColor(0, -1);
         arr.recycle();
         return color;
