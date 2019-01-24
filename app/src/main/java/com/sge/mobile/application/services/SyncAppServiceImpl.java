@@ -51,5 +51,7 @@ public class SyncAppServiceImpl implements SyncAppService {
         }
 
         UserSession.getInstance().setTablesNumber(this.sgeOrderServiceAgent.getTables(UserSession.getInstance().getSgeServiceUrl()));
+
+        UserSession.getInstance().setTables(this.sgeOrderServiceAgent.getTablesArray(UserSession.getInstance().getSgeServiceUrl()));
     }
 }

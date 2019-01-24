@@ -1,6 +1,9 @@
 package com.sge.mobile.presentation;
 
+import com.sge.mobile.domain.model.Mesa;
 import com.sge.mobile.domain.model.Pedido;
+
+import java.util.List;
 
 /**
  * Created by Daniel on 05/04/14.
@@ -19,6 +22,8 @@ public final class UserSession {
     private Boolean administrator;
     private String userName;
     private String password;
+
+    private List<Mesa> tables;
 
     public static UserSession getInstance() {
         return instance;
@@ -48,6 +53,14 @@ public final class UserSession {
 
     public void setTablesNumber(int tablesNumber) {
         this.tablesNumber = tablesNumber;
+    }
+
+    public List<Mesa> getTables() {
+        return tables;
+    }
+
+    public void setTables(List<Mesa> tables) {
+        this.tables = tables;
     }
 
     public String getSgeServiceUrl() {

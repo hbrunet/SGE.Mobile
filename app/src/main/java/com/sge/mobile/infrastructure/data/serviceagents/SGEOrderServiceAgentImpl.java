@@ -4,6 +4,7 @@ package com.sge.mobile.infrastructure.data.serviceagents;
 import com.sge.mobile.application.services.CategoryAppService;
 import com.sge.mobile.application.services.ProductAppService;
 import com.sge.mobile.domain.model.Accesorio;
+import com.sge.mobile.domain.model.Mesa;
 import com.sge.mobile.domain.model.Producto;
 import com.sge.mobile.domain.model.ResumenMesa;
 import com.sge.mobile.domain.model.ResumenMesaDetalle;
@@ -225,6 +226,44 @@ public class SGEOrderServiceAgentImpl implements SGEOrderServiceAgent {
             return Integer.parseInt(result.toString());
         } catch (Exception e) {
             return 0;
+        }
+    }
+
+    @Override
+    public List<Mesa> getTablesArray(String serviceUrl) {
+        List<Mesa> mesas = new ArrayList<Mesa>();
+
+        final String NAMESPACE = "http://SGE.Service.Contracts.Service";
+        final String URL = serviceUrl;
+        final String METHOD_NAME = "GetTablesArray";
+        final String SOAP_ACTION = "http://SGE.Service.Contracts.Service/IOrderService/GetTablesArray";
+
+        SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.dotNet = true;
+
+        envelope.setOutputSoapObject(request);
+
+        HttpTransportSE transporte = new HttpTransportSE(URL);
+
+        try {
+            transporte.call(SOAP_ACTION, envelope);
+
+            SoapObject resSoap = (SoapObject) envelope.getResponse();
+
+            for (int i = 0; i < resSoap.getPropertyCount(); i++) {
+                SoapObject ic = (SoapObject) resSoap.getProperty(i);
+
+                Mesa mesa = new Mesa();
+                mesa.setDescripcion(ic.getProperty("Descripcion").toString());
+                mesa.setId(Integer.parseInt(ic.getProperty("MesaId").toString()));
+
+                mesas.add(mesa);
+            }
+            return mesas;
+        } catch (Exception e) {
+            return null;
         }
     }
 

@@ -21,6 +21,8 @@ public interface SGEOrderServiceAgent {
 
     int getTables(String serviceUrl);
 
+    List<Mesa> getTablesArray(String serviceUrl);
+
     void sendOrder(int waiter, int table, String order, String notes, String serviceUrl);
 
     boolean testConnection(String serviceUrl);

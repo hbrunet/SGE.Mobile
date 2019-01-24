@@ -7,20 +7,12 @@ import java.util.List;
  * Created by Daniel on 30/03/14.
  */
 public class Pedido {
-    private int nroMesa;
     private String observacion;
     private List<LineaPedido> lineasPedido;
+    private Mesa mesa;
 
     public Pedido() {
         this.lineasPedido = new ArrayList<>();
-    }
-
-    public int getNroMesa() {
-        return nroMesa;
-    }
-
-    public void setNroMesa(int nroMesa) {
-        this.nroMesa = nroMesa;
     }
 
     public String getObservacion() {
@@ -45,6 +37,14 @@ public class Pedido {
             total = total + lineaPedido.getPrecio();
         }
         return total;
+    }
+
+    public Mesa getMesa() {
+        return mesa;
+    }
+
+    public void setMesa(Mesa mesa) {
+        this.mesa = mesa;
     }
 
     @Override

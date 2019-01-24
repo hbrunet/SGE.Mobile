@@ -18,11 +18,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sge.mobile.domain.model.LineaPedido;
+import com.sge.mobile.domain.model.Mesa;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class OrderActivity extends AppCompatActivity {
@@ -41,7 +41,9 @@ public class OrderActivity extends AppCompatActivity {
         this.lvOrderLines = (ListView) findViewById(R.id.lvOrderLines);
         this.txtObservation = (TextView) findViewById(R.id.txtObservation);
         this.lblTotalPrice = (TextView) findViewById(R.id.lblTotalPrice);
-        this.populateTables();
+        if (UserSession.getInstance().getTables() != null) {
+            this.populateTables();
+        }
         this.txtObservation.setText(UserSession.getInstance().getOrder().getObservacion());
         this.txtObservation.addTextChangedListener(new TextWatcher() {
             @Override
@@ -85,29 +87,20 @@ public class OrderActivity extends AppCompatActivity {
     }
 
     public void populateTables() {
-        List<String> tablesNames = new ArrayList<String>();
 
-        for (int i = 0; i <= UserSession.getInstance().getTablesNumber(); i++) {
-            String tableNumber = String.format("%1$2s", i);
-            tableNumber = tableNumber.replace(' ', '0');
-            tablesNames.add("Mesa - " + tableNumber);
-        }
+        ArrayAdapter<Mesa> adapter = new ArrayAdapter<Mesa>(this,
+                                                            android.R.layout.simple_spinner_dropdown_item,
+                                                            UserSession.getInstance().getTables());
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, tablesNames);
-        dataAdapter
-                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        this.spinnerTables.setAdapter(dataAdapter);
+        adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
+        this.spinnerTables.setAdapter(adapter);
 
-        String selectedTableNumber = String.format("%1$2s", UserSession.getInstance().getOrder().getNroMesa());
-        selectedTableNumber = selectedTableNumber.replace(' ', '0');
-        this.spinnerTables.setSelection(dataAdapter.getPosition("Mesa - " + selectedTableNumber));
+        this.spinnerTables.setSelection(adapter.getPosition(UserSession.getInstance().getOrder().getMesa()));
         this.spinnerTables.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedTable = spinnerTables.getSelectedItem().toString();
-                int tableNumber = Integer.parseInt(selectedTable.substring(selectedTable.indexOf("-") + 2));
-                UserSession.getInstance().getOrder().setNroMesa(tableNumber);
+                Mesa selectedTable = (Mesa)spinnerTables.getSelectedItem();
+                UserSession.getInstance().getOrder().setMesa(selectedTable);
             }
 
             @Override
@@ -161,8 +154,8 @@ public class OrderActivity extends AppCompatActivity {
     public void sendOrder(View button) {
         if (UserSession.getInstance().getUserId() > 0) {
             if (UserSession.getInstance().getOrder().getLineasPedido().size() > 0) {
-                if (UserSession.getInstance().getTablesNumber() > 0
-                        && UserSession.getInstance().getOrder().getNroMesa() > 0) {
+                if (UserSession.getInstance().getTables() != null && UserSession.getInstance().getTables().size() > 0
+                        && UserSession.getInstance().getOrder().getMesa() != null) {
                     SendOrderAsyncTask sendOrderAsyncTask = new SendOrderAsyncTask(OrderActivity.this);
                     sendOrderAsyncTask.execute();
                 } else {
