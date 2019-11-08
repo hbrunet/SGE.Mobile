@@ -30,4 +30,6 @@ public interface SGEOrderServiceAgent {
     boolean changeUserPassword(String user, String oldPassword, String newPassword, String serviceUrl);
 
     ResumenMesa getTableStatus(int waiter, int table, String serviceUrl);
+
+    List<Sector> getSectorsArray(String serviceUrl);
 }

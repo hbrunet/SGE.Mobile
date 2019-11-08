@@ -10,6 +10,7 @@ import com.sge.mobile.domain.model.ResumenMesa;
 import com.sge.mobile.domain.model.ResumenMesaDetalle;
 import com.sge.mobile.domain.model.Rubro;
 import com.sge.mobile.domain.model.SGEOrderServiceAgent;
+import com.sge.mobile.domain.model.Sector;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -395,5 +396,52 @@ public class SGEOrderServiceAgentImpl implements SGEOrderServiceAgent {
             System.out.println(e.getMessage());
         }
         return null;
+    }
+
+    @Override
+    public List<Sector> getSectorsArray(String serviceUrl) {
+        List<Sector> sectors = new ArrayList<Sector>();
+
+        final String NAMESPACE = "http://SGE.Service.Contracts.Service";
+        final String URL = serviceUrl;
+        final String METHOD_NAME = "GetSectorsArray";
+        final String SOAP_ACTION = "http://SGE.Service.Contracts.Service/IOrderService/GetSectorsArray";
+
+        SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.dotNet = true;
+
+        envelope.setOutputSoapObject(request);
+
+        HttpTransportSE transporte = new HttpTransportSE(URL);
+
+        try {
+            transporte.call(SOAP_ACTION, envelope);
+
+            SoapObject sectorsSoap = (SoapObject) envelope.getResponse();
+
+            for (int i = 0; i < sectorsSoap.getPropertyCount(); i++) {
+                SoapObject sectorSoap = (SoapObject) sectorsSoap.getProperty(i);
+
+                Sector sector = new Sector();
+                sector.setDescripcion(sectorSoap.getProperty("Descripcion").toString());
+                sector.setId(Integer.parseInt(sectorSoap.getProperty("SectorId").toString()));
+                SoapObject tablesSoap = (SoapObject) sectorsSoap.getProperty("Mesas");
+                for (int j = 0; i < tablesSoap.getPropertyCount(); j++) {
+                    SoapObject tableSoap = (SoapObject) sectorsSoap.getProperty(j);
+                    Mesa mesa = new Mesa();
+                    mesa.setDescripcion(tableSoap.getProperty("Descripcion").toString());
+                    mesa.setId(Integer.parseInt(tableSoap.getProperty("MesaId").toString()));
+
+                    sector.getMesas().add(mesa);
+                }
+
+                sectors.add(sector);
+            }
+            return sectors;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

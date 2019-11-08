@@ -2,6 +2,7 @@ package com.sge.mobile.presentation;
 
 import com.sge.mobile.domain.model.Mesa;
 import com.sge.mobile.domain.model.Pedido;
+import com.sge.mobile.domain.model.Sector;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ public final class UserSession {
     private String password;
 
     private List<Mesa> tables;
+    private List<Sector> sectors;
 
     public static UserSession getInstance() {
         return instance;
@@ -93,5 +95,13 @@ public final class UserSession {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Sector> getSectors() {
+        return sectors;
+    }
+
+    public void setSectors(List<Sector> sectors) {
+        this.sectors = sectors;
     }
 }
