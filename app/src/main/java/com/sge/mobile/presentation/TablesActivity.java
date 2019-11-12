@@ -1,90 +1,84 @@
 package com.sge.mobile.presentation;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.SimpleExpandableListAdapter;
 import android.widget.Toast;
 
-import com.sge.mobile.domain.model.LineaPedido;
-import com.sge.mobile.domain.model.Producto;
-import com.sge.mobile.domain.model.Rubro;
+import com.sge.mobile.domain.model.Mesa;
+import com.sge.mobile.domain.model.Sector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class TablesActivity extends AppCompatActivity {
     private ExpandableListView tablesList;
+    private static final String NAME = "NAME";
+    private static final String ID = "ID";
+    private SimpleExpandableListAdapter mAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tables);
         this.setTitle("Mesas");
-        this.tablesList = (ExpandableListView) findViewById(R.id.tablesList);
+        this.tablesList = findViewById(R.id.tablesList);
         this.populateTables();
     }
 
     public void populateTables() {
         try {
-            String NAME = "NAME";
-
-            String groupFrom[] = {NAME};
-            int groupTo[] = {0}; // {R.id.heading};
-            String childFrom[] = {NAME};
-            int childTo[] = {0}; // {R.id.childItem};
-
-            List<Map<String, String>> groupData = new ArrayList<Map<String, String>>();
-            List<List<Map<String, String>>> childData = new ArrayList<List<Map<String, String>>>();
-            final String groupItems[] = {"Animals", "Birds"};
-            final String[][] childItems = {{"Dog", "Cat", "Tiger"}, {"Crow", "Sparrow"}};
-
-            for (int i = 0; i < groupItems.length; i++) {
-                Map<String, String> curGroupMap = new HashMap<String, String>();
+            List<Map<String, String>> groupData = new ArrayList<>();
+            List<List<Map<String, String>>> childData = new ArrayList<>();
+            List<Sector> sectors = UserSession.getInstance().getSectors();
+            for(Sector sector : sectors){
+                Map<String, String> curGroupMap = new HashMap<>();
+                curGroupMap.put(NAME, sector.getDescripcion());
+                curGroupMap.put(ID, String.valueOf(sector.getId()));
                 groupData.add(curGroupMap);
-                curGroupMap.put(NAME, groupItems[i]);
 
-                List<Map<String, String>> children = new ArrayList<Map<String, String>>();
-                for (int j = 0; j < childItems[i].length; j++) {
-                    Map<String, String> curChildMap = new HashMap<String, String>();
+                List<Map<String, String>> children = new ArrayList<>();
+                for (Mesa table : sector.getMesas()){
+                    Map<String, String> curChildMap = new HashMap<>();
+                    curChildMap.put(NAME, table.getDescripcion());
+                    curChildMap.put(ID, String.valueOf(table.getId()));
                     children.add(curChildMap);
-                    curChildMap.put(NAME, childItems[i][j]);
                 }
                 childData.add(children);
             }
+            String groupFrom[] = {NAME, ID};
+            int groupTo[] = {R.id.sectorName, R.id.sectorId};
+            String childFrom[] = {NAME, ID};
+            int childTo[] = {R.id.tableName, R.id.tableId};
 
-            final SimpleExpandableListAdapter expListAdapter = new SimpleExpandableListAdapter(this, groupData,
-                    0,
-                    groupFrom, groupTo,
-                    childData, 0,
-                    childFrom, childTo);
-
-            // perform set on group click listener event
-            tablesList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-                @Override
-                public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-
-                    // display a toast with group name whenever a user clicks on a group item
-                    Toast.makeText(getApplicationContext(), "Group Name Is :" + groupItems[groupPosition], Toast.LENGTH_LONG).show();
-
-                    return false;
-                }
-            });
-            // perform set on child click listener event
+            mAdapter = new SimpleExpandableListAdapter(this,
+                                                        groupData,
+                                                        R.layout.sector_row,
+                                                        groupFrom,
+                                                        groupTo,
+                                                        childData,
+                                                        R.layout.table_row,
+                                                        childFrom,
+                                                        childTo);
+            tablesList.setAdapter(mAdapter);
             tablesList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
                 @Override
                 public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-
-                    // display a toast with child name whenever a user clicks on a child item
-                    Toast.makeText(getApplicationContext(), "Child Name Is :" + childItems[groupPosition][childPosition], Toast.LENGTH_LONG).show();
-                    return false;
+                    Map<String, String> selectedChild = (HashMap<String, String>) mAdapter.getChild(groupPosition, childPosition);
+                    int tableId = Integer.valueOf(selectedChild.get(ID));
+                    String tableName = selectedChild.get(NAME);
+                    UserSession.getInstance().getOrder().setMesa(new Mesa(tableId, tableName));
+                    Toast.makeText(getBaseContext(), String.format("La tableName=%s fue seleccionada", tableName), Toast.LENGTH_SHORT)
+                            .show();
+                    finish();
+                    return true;
                 }
             });
-
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
