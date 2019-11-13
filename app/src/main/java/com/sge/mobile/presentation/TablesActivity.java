@@ -1,6 +1,5 @@
 package com.sge.mobile.presentation;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -69,12 +68,16 @@ public class TablesActivity extends AppCompatActivity {
             tablesList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
                 @Override
                 public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                    Map<String, String> selectedGroup = (HashMap<String, String>) mAdapter.getGroup(groupPosition);
                     Map<String, String> selectedChild = (HashMap<String, String>) mAdapter.getChild(groupPosition, childPosition);
+                    int sectorId = Integer.valueOf(selectedGroup.get(ID));
+                    String sectorName = selectedGroup.get(NAME);
                     int tableId = Integer.valueOf(selectedChild.get(ID));
                     String tableName = selectedChild.get(NAME);
-                    UserSession.getInstance().getOrder().setMesa(new Mesa(tableId, tableName));
-                    Toast.makeText(getBaseContext(), String.format("La tableName=%s fue seleccionada", tableName), Toast.LENGTH_SHORT)
+                    UserSession.getInstance().getOrder().setMesa(new Mesa(tableId, tableName, sectorId, sectorName));
+                    Toast.makeText(getBaseContext(), String.format("%s - %s fue seleccionada", sectorName, tableName), Toast.LENGTH_SHORT)
                             .show();
+                    setResult(RESULT_OK);
                     finish();
                     return true;
                 }

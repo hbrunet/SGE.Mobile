@@ -433,7 +433,8 @@ public class SGEOrderServiceAgentImpl implements SGEOrderServiceAgent {
                     Mesa mesa = new Mesa();
                     mesa.setDescripcion(tableSoap.getProperty("Descripcion").toString());
                     mesa.setId(Integer.parseInt(tableSoap.getProperty("MesaId").toString()));
-
+                    mesa.setSectorId(sector.getId());
+                    mesa.setSectorDescripcion(sector.getDescripcion());
                     sector.getMesas().add(mesa);
                 }
 

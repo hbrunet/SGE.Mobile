@@ -2,18 +2,17 @@ package com.sge.mobile.presentation;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,10 +25,11 @@ import java.util.ArrayList;
 
 
 public class OrderActivity extends AppCompatActivity {
-    private Spinner spinnerTables;
     private ListView lvOrderLines;
     private TextView txtObservation;
     private TextView lblTotalPrice;
+    private TextView lblTableName;
+    private static final int PICK_TABLE_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +37,11 @@ public class OrderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_order);
         this.setTitle(this.getString(R.string.title_activity_order)
                 + " - " + UserSession.getInstance().getUserName());
-        this.spinnerTables = (Spinner) findViewById(R.id.spinnerTables);
-        this.lvOrderLines = (ListView) findViewById(R.id.lvOrderLines);
-        this.txtObservation = (TextView) findViewById(R.id.txtObservation);
-        this.lblTotalPrice = (TextView) findViewById(R.id.lblTotalPrice);
-        if (UserSession.getInstance().getTables() != null) {
-            this.populateTables();
-        }
+        this.lvOrderLines = findViewById(R.id.lvOrderLines);
+        this.txtObservation = findViewById(R.id.txtObservation);
+        this.lblTotalPrice = findViewById(R.id.lblTotalPrice);
+        this.lblTableName = findViewById(R.id.lblTableName);
+        setTableName();
         this.txtObservation.setText(UserSession.getInstance().getOrder().getObservacion());
         this.txtObservation.addTextChangedListener(new TextWatcher() {
             @Override
@@ -65,7 +63,6 @@ public class OrderActivity extends AppCompatActivity {
         this.setTotalPrice();
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -84,30 +81,6 @@ public class OrderActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public void populateTables() {
-
-        ArrayAdapter<Mesa> adapter = new ArrayAdapter<Mesa>(this,
-                                                            android.R.layout.simple_spinner_dropdown_item,
-                                                            UserSession.getInstance().getTables());
-
-        adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
-        this.spinnerTables.setAdapter(adapter);
-
-        this.spinnerTables.setSelection(adapter.getPosition(UserSession.getInstance().getOrder().getMesa()));
-        this.spinnerTables.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Mesa selectedTable = (Mesa)spinnerTables.getSelectedItem();
-                UserSession.getInstance().getOrder().setMesa(selectedTable);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
     }
 
     private void polulateOrderLines() {
@@ -154,8 +127,7 @@ public class OrderActivity extends AppCompatActivity {
     public void sendOrder(View button) {
         if (UserSession.getInstance().getUserId() > 0) {
             if (UserSession.getInstance().getOrder().getLineasPedido().size() > 0) {
-                if (UserSession.getInstance().getTables() != null && UserSession.getInstance().getTables().size() > 0
-                        && UserSession.getInstance().getOrder().getMesa() != null) {
+                if (UserSession.getInstance().getOrder().getMesa() != null) {
                     SendOrderAsyncTask sendOrderAsyncTask = new SendOrderAsyncTask(OrderActivity.this);
                     sendOrderAsyncTask.execute();
                 } else {
@@ -168,6 +140,20 @@ public class OrderActivity extends AppCompatActivity {
         } else {
             Toast.makeText(getBaseContext(), "Inicie sesión.", Toast.LENGTH_SHORT)
                     .show();
+        }
+    }
+
+    public void selectTable(View button) {
+        Intent intent = new Intent(this, TablesActivity.class);
+        startActivityForResult(intent, PICK_TABLE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == PICK_TABLE_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                setTableName();
+            }
         }
     }
 
@@ -205,5 +191,14 @@ public class OrderActivity extends AppCompatActivity {
         DecimalFormat decimalFormat = new DecimalFormat("0.00", decimalFormatSymbols);
         this.lblTotalPrice.setText("TOTAL A PAGAR: [$ "
                 + decimalFormat.format(UserSession.getInstance().getOrder().getPrecioTotal()) + "]");
+    }
+
+    private void setTableName() {
+        if (UserSession.getInstance().getOrder().getMesa() != null) {
+            Mesa mesa = UserSession.getInstance().getOrder().getMesa();
+            this.lblTableName.setText(String.format("%s - %s", mesa.getSectorDescripcion(), mesa.getDescripcion()));
+        } else {
+            this.lblTableName.setText("Sin mesa");
+        }
     }
 }
