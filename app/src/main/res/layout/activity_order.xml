@@ -11,14 +11,16 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.sge.mobile.presentation.OrderActivity">
 
-    <GridLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:orientation="horizontal"
-        android:layout_marginTop="4dp">
+        android:layout_marginBottom="20dp">
 
-        <GridLayout android:layout_width="wrap_content">
+        <GridLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".70"
+            android:layout_marginRight="5dp">
 
             <TextView
                 android:id="@+id/lblTable"
@@ -26,10 +28,8 @@
                 android:layout_height="wrap_content"
                 android:layout_row="0"
                 android:layout_column="0"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="5dp"
                 android:text="Mesa"
+                android:ellipsize="end"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
@@ -38,27 +38,21 @@
                 android:layout_height="wrap_content"
                 android:layout_row="1"
                 android:layout_column="0"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="5dp"
                 android:ellipsize="end"
                 android:text="SIN MESA"
+                android:maxLines="2"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </GridLayout>
 
         <Button
             android:id="@+id/btnSelectTable"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_row="0"
-            android:layout_column="3"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="0dp"
-            android:ellipsize="end"
             android:onClick="selectTable"
-            android:text="Mesas" />
-    </GridLayout>
+            android:layout_weight=".30"
+        android:text="Mesas" />
+    </LinearLayout>
+
     <EditText
         android:id="@+id/txtObservation"
         android:layout_width="match_parent"
