@@ -10,5 +10,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="error_UnableConnectToSGEService">Error: No fue posible establecer conexión con el servicio SGE. \nAsegúrese de tener habilitada la conexion Wi-Fi y vuela a intentarlo.</string>
     <string name="title_activity_table_orders">Consultar Pedidos Mesa</string>
+    <string name="title_activity_tables">Seleccionar Mesa</string>
 
 </resources>

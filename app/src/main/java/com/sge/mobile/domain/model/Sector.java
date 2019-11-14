@@ -1,11 +1,16 @@
 package com.sge.mobile.domain.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Sector {
     private int id;
     private String descripcion;
     private List<Mesa> mesas;
+
+    public Sector() {
+        this.mesas = new ArrayList<>();
+    }
 
     public int getId() {
         return id;

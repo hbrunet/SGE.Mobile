@@ -10,7 +10,6 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
-        <activity android:name=".TablesActivity"></activity>
         <activity
             android:name=".ProductsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -37,6 +36,10 @@
             android:name=".TableOrdersActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_table_orders" />
+        <activity
+            android:name=".TablesActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/title_activity_tables" />
     </application>
 
 </manifest>

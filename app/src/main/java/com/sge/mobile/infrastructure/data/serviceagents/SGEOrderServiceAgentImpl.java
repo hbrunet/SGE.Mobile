@@ -399,15 +399,17 @@ public class SGEOrderServiceAgentImpl implements SGEOrderServiceAgent {
     }
 
     @Override
-    public List<Sector> getSectorsArray(String serviceUrl) {
-        List<Sector> sectors = new ArrayList<Sector>();
+    public List<Sector> getSectorsForWaiter(int waiter, String serviceUrl) {
+        List<Sector> sectors = new ArrayList<>();
 
         final String NAMESPACE = "http://SGE.Service.Contracts.Service";
         final String URL = serviceUrl;
-        final String METHOD_NAME = "GetSectorsArray";
-        final String SOAP_ACTION = "http://SGE.Service.Contracts.Service/IOrderService/GetSectorsArray";
+        final String METHOD_NAME = "GetSectorsForWaiter";
+        final String SOAP_ACTION = "http://SGE.Service.Contracts.Service/IOrderService/GetSectorsForWaiter";
 
         SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+
+        request.addProperty("waiterId", waiter);
 
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.dotNet = true;
@@ -419,26 +421,29 @@ public class SGEOrderServiceAgentImpl implements SGEOrderServiceAgent {
         try {
             transporte.call(SOAP_ACTION, envelope);
 
-            SoapObject sectorsSoap = (SoapObject) envelope.getResponse();
+            if (envelope.getResponse() != null) {
+                SoapObject sectorsSoap = (SoapObject) envelope.getResponse();
 
-            for (int i = 0; i < sectorsSoap.getPropertyCount(); i++) {
-                SoapObject sectorSoap = (SoapObject) sectorsSoap.getProperty(i);
+                for (int i = 0; i < sectorsSoap.getPropertyCount(); i++) {
+                    SoapObject sectorSoap = (SoapObject) sectorsSoap.getProperty(i);
 
-                Sector sector = new Sector();
-                sector.setDescripcion(sectorSoap.getProperty("Descripcion").toString());
-                sector.setId(Integer.parseInt(sectorSoap.getProperty("SectorId").toString()));
-                SoapObject tablesSoap = (SoapObject) sectorsSoap.getProperty("Mesas");
-                for (int j = 0; i < tablesSoap.getPropertyCount(); j++) {
-                    SoapObject tableSoap = (SoapObject) sectorsSoap.getProperty(j);
-                    Mesa mesa = new Mesa();
-                    mesa.setDescripcion(tableSoap.getProperty("Descripcion").toString());
-                    mesa.setId(Integer.parseInt(tableSoap.getProperty("MesaId").toString()));
-                    mesa.setSectorId(sector.getId());
-                    mesa.setSectorDescripcion(sector.getDescripcion());
-                    sector.getMesas().add(mesa);
+                    Sector sector = new Sector();
+                    sector.setDescripcion(sectorSoap.getProperty("Descripcion").toString());
+                    sector.setId(Integer.parseInt(sectorSoap.getProperty("SectorId").toString()));
+                    if (sectorSoap.getProperty("Mesas") != null) {
+                        SoapObject tablesSoap = (SoapObject) sectorSoap.getProperty("Mesas");
+                        for (int j = 0; j < tablesSoap.getPropertyCount(); j++) {
+                            SoapObject tableSoap = (SoapObject) tablesSoap.getProperty(j);
+                            Mesa mesa = new Mesa();
+                            mesa.setDescripcion(tableSoap.getProperty("Descripcion").toString());
+                            mesa.setId(Integer.parseInt(tableSoap.getProperty("MesaId").toString()));
+                            mesa.setSectorId(sector.getId());
+                            mesa.setSectorDescripcion(sector.getDescripcion());
+                            sector.getMesas().add(mesa);
+                        }
+                    }
+                    sectors.add(sector);
                 }
-
-                sectors.add(sector);
             }
             return sectors;
         } catch (Exception e) {

@@ -25,7 +25,6 @@ public class TablesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tables);
-        this.setTitle("Mesas");
         this.tablesList = findViewById(R.id.tablesList);
         this.populateTables();
     }
@@ -75,7 +74,7 @@ public class TablesActivity extends AppCompatActivity {
                     int tableId = Integer.valueOf(selectedChild.get(ID));
                     String tableName = selectedChild.get(NAME);
                     UserSession.getInstance().getOrder().setMesa(new Mesa(tableId, tableName, sectorId, sectorName));
-                    Toast.makeText(getBaseContext(), String.format("%s - %s fue seleccionada", sectorName, tableName), Toast.LENGTH_SHORT)
+                    Toast.makeText(getBaseContext(), String.format("La mesa %s - %s, fue seleccionada", sectorName, tableName), Toast.LENGTH_SHORT)
                             .show();
                     setResult(RESULT_OK);
                     finish();

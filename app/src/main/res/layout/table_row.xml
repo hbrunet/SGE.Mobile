@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent"
-    android:orientation="vertical" xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="15dp">
 
     <TextView
         android:id="@+id/tableName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="5dp"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:paddingLeft="25dp"
+        android:ellipsize="end"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"
+        android:text="Mesa"/>
+
     <TextView
         android:id="@+id/tableId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible" />
 
-</RelativeLayout>
+</LinearLayout>

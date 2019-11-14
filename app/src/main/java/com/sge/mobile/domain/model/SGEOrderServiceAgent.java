@@ -31,5 +31,5 @@ public interface SGEOrderServiceAgent {
 
     ResumenMesa getTableStatus(int waiter, int table, String serviceUrl);
 
-    List<Sector> getSectorsArray(String serviceUrl);
+    List<Sector> getSectorsForWaiter(int waiter, String serviceUrl);
 }
