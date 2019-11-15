@@ -1,5 +1,6 @@
 package com.sge.mobile.presentation;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -31,9 +32,20 @@ public class TablesActivity extends AppCompatActivity {
 
     public void populateTables() {
         try {
+            boolean addEmpty = getIntent().getBooleanExtra("addEmpty", false);
             List<Map<String, String>> groupData = new ArrayList<>();
             List<List<Map<String, String>>> childData = new ArrayList<>();
             List<Sector> sectors = UserSession.getInstance().getSectors();
+
+            if(addEmpty) {
+                Map<String, String> empty = new HashMap<>();
+                empty.put(NAME, "SIN MESA");
+                empty.put(ID, null);
+                groupData.add(empty);
+                List<Map<String, String>> children = new ArrayList<>();
+                childData.add(children);
+            }
+
             for(Sector sector : sectors){
                 Map<String, String> curGroupMap = new HashMap<>();
                 curGroupMap.put(NAME, sector.getDescripcion());
@@ -49,6 +61,7 @@ public class TablesActivity extends AppCompatActivity {
                 }
                 childData.add(children);
             }
+
             String groupFrom[] = {NAME, ID};
             int groupTo[] = {R.id.sectorName, R.id.sectorId};
             String childFrom[] = {NAME, ID};
@@ -64,6 +77,19 @@ public class TablesActivity extends AppCompatActivity {
                                                         childFrom,
                                                         childTo);
             tablesList.setAdapter(mAdapter);
+            tablesList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+                @Override
+                public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                    Map<String, String> selectedGroup = (HashMap<String, String>) mAdapter.getGroup(groupPosition);
+                    String sectorId = selectedGroup.get(ID);
+                    if (sectorId == null){
+                        setResult(RESULT_OK);
+                        finish();
+                        return true;
+                    }
+                    return false;
+                }
+            });
             tablesList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
                 @Override
                 public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
@@ -73,10 +99,14 @@ public class TablesActivity extends AppCompatActivity {
                     String sectorName = selectedGroup.get(NAME);
                     int tableId = Integer.valueOf(selectedChild.get(ID));
                     String tableName = selectedChild.get(NAME);
-                    UserSession.getInstance().getOrder().setMesa(new Mesa(tableId, tableName, sectorId, sectorName));
+                    Intent intent = new Intent();
+                    intent.putExtra("tableId", tableId);
+                    intent.putExtra("tableName", tableName);
+                    intent.putExtra("sectorId", sectorId);
+                    intent.putExtra("sectorName", sectorName);
                     Toast.makeText(getBaseContext(), String.format("La mesa %s - %s, fue seleccionada", sectorName, tableName), Toast.LENGTH_SHORT)
                             .show();
-                    setResult(RESULT_OK);
+                    setResult(RESULT_OK, intent);
                     finish();
                     return true;
                 }
