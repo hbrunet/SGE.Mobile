@@ -145,6 +145,7 @@ public class OrderActivity extends AppCompatActivity {
 
     public void selectTable(View button) {
         Intent intent = new Intent(this, TablesActivity.class);
+         intent.putExtra("addEmpty", true);
         startActivityForResult(intent, PICK_TABLE_REQUEST);
     }
 
@@ -152,6 +153,17 @@ public class OrderActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == PICK_TABLE_REQUEST) {
             if (resultCode == RESULT_OK) {
+                if (data != null) {
+                    Mesa table = new Mesa(
+                            data.getIntExtra("tableId", -1),
+                            data.getStringExtra("tableName"),
+                            data.getIntExtra("sectorId", -1),
+                            data.getStringExtra("sectorName"));
+                    UserSession.getInstance().getOrder().setMesa(table);
+
+                } else {
+                    UserSession.getInstance().getOrder().setMesa(null);
+                }
                 setTableName();
             }
         }
@@ -198,7 +210,7 @@ public class OrderActivity extends AppCompatActivity {
             Mesa mesa = UserSession.getInstance().getOrder().getMesa();
             this.lblTableName.setText(String.format("%s - %s", mesa.getSectorDescripcion(), mesa.getDescripcion()));
         } else {
-            this.lblTableName.setText("Sin mesa");
+            this.lblTableName.setText("SIN MESA");
         }
     }
 }

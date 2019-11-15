@@ -1,17 +1,16 @@
 package com.sge.mobile.presentation;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.sge.mobile.domain.model.Mesa;
@@ -25,9 +24,10 @@ import java.util.ArrayList;
  */
 public class TableOrdersActivity extends AppCompatActivity {
     public TextView lblOrdersCount;
-    private Spinner spinnerTables;
     private ListView lvOrders;
-    private int tableNumber;
+    private TextView lblTableName;
+    private static final int PICK_TABLE_REQUEST = 2;
+    private int tableNumber = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,38 +35,19 @@ public class TableOrdersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_table_orders);
         this.setTitle(this.getString(R.string.title_activity_table_orders)
                 + " - " + UserSession.getInstance().getUserName());
-        this.spinnerTables = (Spinner) findViewById(R.id.spinnerTables);
-        this.lvOrders = (ListView) findViewById(R.id.lvOrders);
-        this.lblOrdersCount = (TextView) findViewById(R.id.lblOrdersCount);
-        this.populateTables();
+        this.lvOrders = findViewById(R.id.lvOrders);
+        this.lblOrdersCount = findViewById(R.id.lblOrdersCount);
+        this.lblTableName = findViewById(R.id.lblTableName);
+    }
+
+    public void selectTable(View button) {
+        Intent intent = new Intent(this, TablesActivity.class);
+        startActivityForResult(intent, PICK_TABLE_REQUEST);
     }
 
     public void searchOrders(View button) {
         GetTableStatusAsyncTask getTableStatusAsyncTask = new GetTableStatusAsyncTask(TableOrdersActivity.this, tableNumber);
         getTableStatusAsyncTask.execute();
-    }
-
-    public void populateTables() {
-
-        ArrayAdapter<Mesa> adapter = new ArrayAdapter<Mesa>(this,
-                android.R.layout.simple_spinner_dropdown_item,
-                UserSession.getInstance().getTables());
-
-        adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
-        this.spinnerTables.setAdapter(adapter);
-
-        this.spinnerTables.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Mesa selectedTable = (Mesa)spinnerTables.getSelectedItem();
-                tableNumber = selectedTable.getId();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
     }
 
     public void polulateOrders(final ResumenMesa resumenMesa) {
@@ -77,11 +58,11 @@ public class TableOrdersActivity extends AppCompatActivity {
                 public void onItem(Object item, final View view) {
                     if (item != null) {
                         ResumenMesaDetalle resumenMesaDetalle = (ResumenMesaDetalle) item;
-                        TextView lblProduct = (TextView) view.findViewById(R.id.lblProd);
-                        TextView lblQuantity = (TextView) view.findViewById(R.id.lblQuantity);
-                        TextView lblAccessories = (TextView) view.findViewById(R.id.lblAcces);
-                        TextView lblDate = (TextView) view.findViewById(R.id.lblDate);
-                        TextView lblOrderId = (TextView) view.findViewById(R.id.lblOrderId);
+                        TextView lblProduct = view.findViewById(R.id.lblProd);
+                        TextView lblQuantity = view.findViewById(R.id.lblQuantity);
+                        TextView lblAccessories = view.findViewById(R.id.lblAcces);
+                        TextView lblDate = view.findViewById(R.id.lblDate);
+                        TextView lblOrderId = view.findViewById(R.id.lblOrderId);
 
                         if (lblOrderId != null) {
                             lblOrderId.setText(Integer.toString(resumenMesaDetalle.getPedidoId()));
@@ -138,5 +119,21 @@ public class TableOrdersActivity extends AppCompatActivity {
         int color = arr.getColor(0, -1);
         arr.recycle();
         return color;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == PICK_TABLE_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                if (data != null) {
+                    tableNumber = data.getIntExtra("tableId", -1);
+                    this.lblTableName.setText(String.format("%s - %s", data.getStringExtra("sectorName"), data.getStringExtra("tableName")));
+                }
+                else {
+                    tableNumber = -1;
+                    this.lblTableName.setText("SIN MESA");
+                }
+            }
+        }
     }
 }
