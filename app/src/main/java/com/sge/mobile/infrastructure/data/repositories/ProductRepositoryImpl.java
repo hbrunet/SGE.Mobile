@@ -76,4 +76,16 @@ public class ProductRepositoryImpl extends RepositoryImpl<Producto> implements P
         this.removeAll(Accesorio.class);
         this.removeAll(Producto.class);
     }
+
+    @Override
+    public List<Producto> getFiltered(String searchText) {
+        try {
+            QueryBuilder<Producto, Integer> qb = this.getEntityDao().queryBuilder();
+            qb.where().like(Producto.DESCRIPCION, searchText);
+            return qb.query();
+        } catch (SQLException e) {
+            Log.e(TAG, e.getMessage());
+            return null;
+        }
+    }
 }

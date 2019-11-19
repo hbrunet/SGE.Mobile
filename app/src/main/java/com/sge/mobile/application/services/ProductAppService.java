@@ -21,5 +21,5 @@ public interface ProductAppService {
 
     List<Accesorio> FindAccessories();
 
-    List<Producto> FindProducts();
+    List<Producto> FindProducts(String searchText);
 }

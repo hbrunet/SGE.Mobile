@@ -56,7 +56,7 @@ public class ProductAppServiceImpl implements ProductAppService {
     }
 
     @Override
-    public List<Producto> FindProducts() {
-        return this.productRepository.getAll();
+    public List<Producto> FindProducts(String searchText) {
+        return this.productRepository.getFiltered(searchText);
     }
 }

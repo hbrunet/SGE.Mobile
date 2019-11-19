@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
@@ -35,6 +38,7 @@ public class ProductsActivity extends AppCompatActivity {
     private ProductAppService productAppService;
     private ConfigurationAppService configurationAppService;
     private boolean doubleBackToExitPressedOnce;
+    private EditText searchText;
 
     private CategoryAppService getCategoryAppService() {
         if (categoryAppService == null) {
@@ -79,7 +83,26 @@ public class ProductsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_products);
         this.setTitle(this.getString(R.string.title_activity_products)
                 + " - " + UserSession.getInstance().getUserName());
-        this.productsList = (ExpandableListView) findViewById(R.id.productsList);
+        this.productsList = findViewById(R.id.productsList);
+        this.searchText = findViewById(R.id.searchText);
+        this.searchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(searchText.getText().toString().length() > 0){
+                    
+                }
+            }
+        });
         this.populateProducts();
     }
 
