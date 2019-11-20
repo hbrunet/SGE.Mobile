@@ -22,7 +22,6 @@
             android:layout_gravity="center_vertical"
             android:ellipsize="end"
             android:fontFamily="sans-serif"
-            android:maxLines="2"
             android:paddingLeft="25dp"
             android:text="Product"
             android:textAppearance="?android:attr/textAppearanceMedium" />

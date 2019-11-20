@@ -7,7 +7,20 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:focusableInTouchMode="true"
     tools:context="com.sge.mobile.presentation.TablesActivity">
+
+    <EditText
+        android:id="@+id/searchText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@android:drawable/ic_menu_search"
+        android:drawablePadding="5dp"
+        android:hint="Buscar"
+        android:imeOptions="actionDone"
+        android:inputType="textAutoComplete"
+        android:selectAllOnFocus="false"
+        android:singleLine="true" />
 
     <ExpandableListView
         android:id="@+id/tablesList"

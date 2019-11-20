@@ -12,6 +12,12 @@ public class Sector {
         this.mesas = new ArrayList<>();
     }
 
+    public Sector(Sector s, List<Mesa> tables){
+        this.id = s.id;
+        this.descripcion = s.descripcion;
+        this.setMesas(tables);
+    }
+
     public int getId() {
         return id;
     }

@@ -14,41 +14,27 @@ import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.sge.mobile.application.services.CategoryAppService;
-import com.sge.mobile.application.services.CategoryAppServiceImpl;
 import com.sge.mobile.application.services.ConfigurationAppService;
 import com.sge.mobile.application.services.ConfigurationAppServiceImpl;
 import com.sge.mobile.application.services.ProductAppService;
 import com.sge.mobile.application.services.ProductAppServiceImpl;
 import com.sge.mobile.domain.model.LineaPedido;
 import com.sge.mobile.domain.model.Producto;
-import com.sge.mobile.domain.model.Rubro;
 import com.sge.mobile.infrastructure.data.SGEDBHelper;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 
 public class ProductsActivity extends AppCompatActivity {
     private SGEDBHelper sgeDBHelper;
     private ExpandableListView productsList;
-    private CategoryAppService categoryAppService;
     private ProductAppService productAppService;
     private ConfigurationAppService configurationAppService;
     private boolean doubleBackToExitPressedOnce;
     private EditText searchText;
-
-    private CategoryAppService getCategoryAppService() {
-        if (categoryAppService == null) {
-            categoryAppService = new CategoryAppServiceImpl(this.getSgeDBHelper());
-        }
-        return categoryAppService;
-    }
 
     public ProductAppService getProductAppService() {
         if (productAppService == null) {
@@ -101,9 +87,7 @@ public class ProductsActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(searchText.getText().toString().length() > 0){
-                    populateProducts();
-                }
+                populateProducts();
             }
         });
 
@@ -181,48 +165,11 @@ public class ProductsActivity extends AppCompatActivity {
         }, 2000);
     }
 
-    private List<String> getCategoriesDescriptions() {
-        List<Rubro> categories = this.getCategoryAppService().findActiveCategories();
-        List<String> categoriesDescriptions = new ArrayList<>();
-        for (Rubro item : categories) {
-            categoriesDescriptions.add(item.getDescripcion());
-        }
-        return categoriesDescriptions;
-    }
-
-    private Map<String, List<String>> getProductsCollections() {
-        List<Rubro> categories = this.getCategoryAppService().findCategories();
-        Map<String, List<String>> productCollections = new LinkedHashMap<>();
-        for (Rubro category : categories) {
-            List<String> productsNames = new ArrayList<>();
-            for (Producto prod : category.getProductos()) {
-                if (!prod.isAccesorio() && prod.isVisible() && prod.getEstado() == 1) {
-                    productsNames.add(prod.getDescripcion());
-                }
-            }
-            productCollections.put(category.getDescripcion(), productsNames);
-        }
-        return productCollections;
-    }
-
     public void populateProducts() {
         try {
             List<Producto> products = getProductAppService().FindProducts((searchText.getText() != null) ? searchText.getText().toString() : "");
 
-            Collections.sort(products, new Comparator<Producto>() {
-                @Override
-                public int compare(final Producto p1, final Producto p2) {
-                    int value1 = p1.getRubro().getDescripcion().compareTo(p2.getRubro().getDescripcion());
-                    if (value1 == 0) {
-                        int value2 = p1.getDescripcion().compareTo(p2.getDescripcion());
-                        return value2;
-                    }
-                    return value1;
-                }
-            });
-
-            Map<String, List<Producto>> productCollections = new HashMap<>();
-
+            Map<String, List<Producto>> productCollections = new TreeMap<>();
             for (Producto product : products) {
                 String key = product.getRubro().getDescripcion();
                 if (productCollections.containsKey(key)) {
@@ -243,31 +190,32 @@ public class ProductsActivity extends AppCompatActivity {
 
                 public boolean onChildClick(ExpandableListView parent, View v,
                                             int groupPosition, int childPosition, long id) {
-                    final String selectedProduct = (String) expListAdapter.getChild(
+                    Producto selectedProduct = (Producto) expListAdapter.getChild(
                             groupPosition, childPosition);
-                    Producto product = productAppService.findProductByDescription(selectedProduct);
-                    if (product != null) {
-                        if (product.getAccesorios() == null || product.getAccesorios().size() == 0) {
-                            LineaPedido orderLine = new LineaPedido();
-                            orderLine.setProductoId(product.getId());
-                            orderLine.setDescripcionProducto(product.getDescripcion());
-                            orderLine.setAccesorios(product.getIdsAccesoriosPorDefecto());
-                            orderLine.setDescripcionAccesorios(product.getDescripcionAccesoriosPorDefecto());
-                            orderLine.setPrecio(product.getPrecio());
-                            UserSession.getInstance().getOrder().getLineasPedido().add(orderLine);
-                            Toast.makeText(getBaseContext(), selectedProduct + ", " + "fue agregado al pedido.", Toast.LENGTH_SHORT)
-                                    .show();
-                        } else {
-                            showAccessoriesDialog(product);
-                        }
-                    } else {
-                        Toast.makeText(getBaseContext(), "El producto seleccionado no existe.", Toast.LENGTH_SHORT)
+
+                    if (selectedProduct.getAccesorios() == null || selectedProduct.getAccesorios().size() == 0) {
+                        LineaPedido orderLine = new LineaPedido();
+                        orderLine.setProductoId(selectedProduct.getId());
+                        orderLine.setDescripcionProducto(selectedProduct.getDescripcion());
+                        orderLine.setAccesorios(selectedProduct.getIdsAccesoriosPorDefecto());
+                        orderLine.setDescripcionAccesorios(selectedProduct.getDescripcionAccesoriosPorDefecto());
+                        orderLine.setPrecio(selectedProduct.getPrecio());
+                        UserSession.getInstance().getOrder().getLineasPedido().add(orderLine);
+                        Toast.makeText(getBaseContext(), selectedProduct.getDescripcion() + ", " + "fue agregado al pedido.", Toast.LENGTH_SHORT)
                                 .show();
+                    } else {
+                        showAccessoriesDialog(selectedProduct);
                     }
 
                     return true;
                 }
             });
+
+            if (searchText.getText().length() > 0) {
+                for (int i = 0; i < expListAdapter.getGroupCount(); i++) {
+                    productsList.expandGroup(i);
+                }
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

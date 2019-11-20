@@ -3,7 +3,10 @@ package com.sge.mobile.presentation;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.SimpleExpandableListAdapter;
 import android.widget.Toast;
@@ -12,6 +15,8 @@ import com.sge.mobile.domain.model.Mesa;
 import com.sge.mobile.domain.model.Sector;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,12 +26,30 @@ public class TablesActivity extends AppCompatActivity {
     private static final String NAME = "NAME";
     private static final String ID = "ID";
     private SimpleExpandableListAdapter mAdapter;
+    private EditText searchText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tables);
         this.tablesList = findViewById(R.id.tablesList);
+        this.searchText = findViewById(R.id.searchText);
+        this.searchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                populateTables();
+            }
+        });
         this.populateTables();
     }
 
@@ -35,7 +58,31 @@ public class TablesActivity extends AppCompatActivity {
             boolean addEmpty = getIntent().getBooleanExtra("addEmpty", false);
             List<Map<String, String>> groupData = new ArrayList<>();
             List<List<Map<String, String>>> childData = new ArrayList<>();
-            List<Sector> sectors = UserSession.getInstance().getSectors();
+
+            List<Sector> filteredSectors = new ArrayList<>();
+            if (searchText.getText().length() > 0) {
+                for (Sector sector : UserSession.getInstance().getSectors()) {
+                    List<Mesa> filteredTables = new ArrayList<>();
+                    for (Mesa table : sector.getMesas()) {
+                        if (table.getDescripcion().toUpperCase().contains(searchText.getText().toString().toUpperCase())) {
+                            filteredTables.add(table);
+                        }
+                    }
+                    if (filteredTables.size() > 0){
+                       Sector s = new Sector(sector, filteredTables);
+                       filteredSectors.add(s);
+                    }
+                }
+            } else {
+                filteredSectors.addAll(UserSession.getInstance().getSectors());
+            }
+
+            Collections.sort(filteredSectors, new Comparator<Sector>() {
+                @Override
+                public int compare(final Sector s1, final Sector s2) {
+                    return  s1.getDescripcion().compareTo(s2.getDescripcion());
+                }
+            });
 
             if(addEmpty) {
                 Map<String, String> empty = new HashMap<>();
@@ -46,7 +93,7 @@ public class TablesActivity extends AppCompatActivity {
                 childData.add(children);
             }
 
-            for(Sector sector : sectors){
+            for(Sector sector : filteredSectors){
                 Map<String, String> curGroupMap = new HashMap<>();
                 curGroupMap.put(NAME, sector.getDescripcion());
                 curGroupMap.put(ID, String.valueOf(sector.getId()));
@@ -111,6 +158,12 @@ public class TablesActivity extends AppCompatActivity {
                     return true;
                 }
             });
+
+            if (searchText.getText().length() > 0) {
+                for (int i = 0; i < mAdapter.getGroupCount(); i++) {
+                    tablesList.expandGroup(i);
+                }
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
