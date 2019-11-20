@@ -4,9 +4,11 @@ import android.util.Log;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.query.OrderBy;
 import com.sge.mobile.domain.model.Accesorio;
 import com.sge.mobile.domain.model.ProductRepository;
 import com.sge.mobile.domain.model.Producto;
+import com.sge.mobile.domain.model.Rubro;
 import com.sge.mobile.infrastructure.data.SGEDBHelper;
 import com.sge.mobile.infrastructure.data.core.RepositoryImpl;
 
@@ -81,7 +83,11 @@ public class ProductRepositoryImpl extends RepositoryImpl<Producto> implements P
     public List<Producto> getFiltered(String searchText) {
         try {
             QueryBuilder<Producto, Integer> qb = this.getEntityDao().queryBuilder();
-            qb.where().like(Producto.DESCRIPCION, searchText);
+            qb.where().eq(Producto.VISIBLE, true)
+                    .and().eq(Producto.ESTADO, 1)
+                    .and().eq(Producto.ES_ACCESORIO, false)
+                    .and().like(Producto.DESCRIPCION, "%" + searchText + "%");
+            qb.orderBy(Producto.DESCRIPCION, true);
             return qb.query();
         } catch (SQLException e) {
             Log.e(TAG, e.getMessage());

@@ -26,6 +26,9 @@ import com.sge.mobile.domain.model.Rubro;
 import com.sge.mobile.infrastructure.data.SGEDBHelper;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,10 +102,11 @@ public class ProductsActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if(searchText.getText().toString().length() > 0){
-                    
+                    populateProducts();
                 }
             }
         });
+
         this.populateProducts();
     }
 
@@ -179,7 +183,7 @@ public class ProductsActivity extends AppCompatActivity {
 
     private List<String> getCategoriesDescriptions() {
         List<Rubro> categories = this.getCategoryAppService().findActiveCategories();
-        List<String> categoriesDescriptions = new ArrayList<String>();
+        List<String> categoriesDescriptions = new ArrayList<>();
         for (Rubro item : categories) {
             categoriesDescriptions.add(item.getDescripcion());
         }
@@ -188,9 +192,9 @@ public class ProductsActivity extends AppCompatActivity {
 
     private Map<String, List<String>> getProductsCollections() {
         List<Rubro> categories = this.getCategoryAppService().findCategories();
-        Map<String, List<String>> productCollections = new LinkedHashMap<String, List<String>>();
+        Map<String, List<String>> productCollections = new LinkedHashMap<>();
         for (Rubro category : categories) {
-            List<String> productsNames = new ArrayList<String>();
+            List<String> productsNames = new ArrayList<>();
             for (Producto prod : category.getProductos()) {
                 if (!prod.isAccesorio() && prod.isVisible() && prod.getEstado() == 1) {
                     productsNames.add(prod.getDescripcion());
@@ -203,9 +207,36 @@ public class ProductsActivity extends AppCompatActivity {
 
     public void populateProducts() {
         try {
-            final ExpandableProductListAdapter expListAdapter = new ExpandableProductListAdapter(
-                    this, this.getCategoriesDescriptions(), this.getProductsCollections(),
-                    this.getProductAppService());
+            List<Producto> products = getProductAppService().FindProducts((searchText.getText() != null) ? searchText.getText().toString() : "");
+
+            Collections.sort(products, new Comparator<Producto>() {
+                @Override
+                public int compare(final Producto p1, final Producto p2) {
+                    int value1 = p1.getRubro().getDescripcion().compareTo(p2.getRubro().getDescripcion());
+                    if (value1 == 0) {
+                        int value2 = p1.getDescripcion().compareTo(p2.getDescripcion());
+                        return value2;
+                    }
+                    return value1;
+                }
+            });
+
+            Map<String, List<Producto>> productCollections = new HashMap<>();
+
+            for (Producto product : products) {
+                String key = product.getRubro().getDescripcion();
+                if (productCollections.containsKey(key)) {
+                    List<Producto> list = productCollections.get(key);
+                    list.add(product);
+
+                } else {
+                    List<Producto> list = new ArrayList<>();
+                    list.add(product);
+                    productCollections.put(key, list);
+                }
+            }
+
+            final ExpandableProductListAdapter expListAdapter = new ExpandableProductListAdapter(this, productCollections);
             this.productsList.setAdapter(expListAdapter);
 
             this.productsList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {

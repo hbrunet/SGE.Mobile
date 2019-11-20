@@ -22,37 +22,31 @@ import java.util.Map;
  */
 public class ExpandableProductListAdapter extends BaseExpandableListAdapter {
     private Activity context;
-    private Map<String, List<String>> productCollections;
-    private List<String> categories;
-    private ProductAppService productAppService;
+    private Map<String, List<Producto>> productCollections;
 
-    public ExpandableProductListAdapter(Activity context, List<String> categories,
-                                        Map<String, List<String>> productCollections,
-                                        ProductAppService productAppService) {
+    public ExpandableProductListAdapter(Activity context, Map<String, List<Producto>> productCollections) {
         this.context = context;
         this.productCollections = productCollections;
-        this.categories = categories;
-        this.productAppService = productAppService;
     }
 
     @Override
     public int getGroupCount() {
-        return this.categories.size();
+        return  this.productCollections.keySet().size();
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return this.productCollections.get(this.categories.get(groupPosition)).size();
+        return this.productCollections.get(this.productCollections.keySet().toArray()[groupPosition]).size();
     }
 
     @Override
     public Object getGroup(int groupPosition) {
-        return this.categories.get(groupPosition);
+        return this.productCollections.keySet().toArray()[groupPosition];
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return this.productCollections.get(this.categories.get(groupPosition)).get(childPosition);
+        return this.productCollections.get(this.productCollections.keySet().toArray()[groupPosition]).get(childPosition);
     }
 
     @Override
@@ -79,31 +73,30 @@ public class ExpandableProductListAdapter extends BaseExpandableListAdapter {
             convertView = infalInflater.inflate(R.layout.category_row,
                     null);
         }
-        TextView item = (TextView) convertView.findViewById(R.id.txtCategoryName);
+        TextView item = convertView.findViewById(R.id.txtCategoryName);
         item.setText(categoryName);
         return convertView;
     }
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        final String productName = (String) getChild(groupPosition, childPosition);
+        Producto product = (Producto) getChild(groupPosition, childPosition);
         LayoutInflater inflater = context.getLayoutInflater();
 
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.product_row, null);
         }
 
-        ImageView imgAccesdories = (ImageView) convertView.findViewById(R.id.imgAccessories);
-        Producto product = productAppService.findProductByDescription(productName);
+        ImageView imgAccesdories = convertView.findViewById(R.id.imgAccessories);
         if (product.getAccesorios() == null || product.getAccesorios().size() == 0) {
             imgAccesdories.setVisibility(View.INVISIBLE);
         } else {
             imgAccesdories.setVisibility(View.VISIBLE);
         }
 
-        TextView txtProductName = (TextView) convertView.findViewById(R.id.txtProductName);
-        TextView txtProductPrice = (TextView) convertView.findViewById(R.id.txtProductPrice);
-        txtProductName.setText(productName);
+        TextView txtProductName = convertView.findViewById(R.id.txtProductName);
+        TextView txtProductPrice = convertView.findViewById(R.id.txtProductPrice);
+        txtProductName.setText(product.getDescripcion());
         DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
         decimalFormatSymbols.setDecimalSeparator(',');
         decimalFormatSymbols.setGroupingSeparator('.');
