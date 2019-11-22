@@ -100,6 +100,12 @@ public class TablesActivity extends AppCompatActivity {
                 groupData.add(curGroupMap);
 
                 List<Map<String, String>> children = new ArrayList<>();
+                Collections.sort(sector.getMesas(), new Comparator<Mesa>() {
+                    @Override
+                    public int compare(final Mesa m1, final Mesa m2) {
+                        return  m1.getDescripcion().compareTo(m2.getDescripcion());
+                    }
+                });
                 for (Mesa table : sector.getMesas()){
                     Map<String, String> curChildMap = new HashMap<>();
                     curChildMap.put(NAME, table.getDescripcion());
