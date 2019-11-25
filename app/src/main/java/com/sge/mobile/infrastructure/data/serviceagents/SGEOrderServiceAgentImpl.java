@@ -269,7 +269,7 @@ public class SGEOrderServiceAgentImpl implements SGEOrderServiceAgent {
     }
 
     @Override
-    public int sendOrder(int waiter, int table, String order, String notes, String serviceUrl) {
+    public boolean sendOrder(int waiter, int table, String order, String notes, String serviceUrl) {
         final String NAMESPACE = "http://SGE.Service.Contracts.Service";
         final String URL = serviceUrl;
         final String METHOD_NAME = "SendOrder";
@@ -292,13 +292,11 @@ public class SGEOrderServiceAgentImpl implements SGEOrderServiceAgent {
             androidHttpTransport.debug = true;
             androidHttpTransport.call(SOAP_ACTION, envelope);
             SoapPrimitive result = (SoapPrimitive) envelope.getResponse();
-            int res = Integer.parseInt(result.toString());
-            return res;
-
+            return Boolean.parseBoolean(result.toString());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        return 0;
+        return false;
     }
 
     @Override

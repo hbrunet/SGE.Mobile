@@ -11,11 +11,10 @@ import com.sge.mobile.infrastructure.data.serviceagents.SGEOrderServiceAgentImpl
 /**
  * Created by Daniel on 06/04/14.
  */
-public class SendOrderAsyncTask extends AsyncTask<Void, Void, Integer> {
+public class SendOrderAsyncTask extends AsyncTask<Void, Void, Boolean> {
     private final ProgressDialog progressDialog;
     private final SGEOrderServiceAgent sgeOrderServiceAgent;
     private final Context activity;
-    private boolean connected;
 
     public SendOrderAsyncTask(Context activity) {
         this.sgeOrderServiceAgent = new SGEOrderServiceAgentImpl();
@@ -33,11 +32,12 @@ public class SendOrderAsyncTask extends AsyncTask<Void, Void, Integer> {
     }
 
     @Override
-    protected Integer doInBackground(Void... params) {
+    protected Boolean doInBackground(Void... params) {
+        int i = 0;
+        Boolean connected;
         try {
-            int i = 0;
             do {
-                this.connected = this.sgeOrderServiceAgent.testConnection(UserSession.getInstance().getSgeServiceUrl());
+                connected = this.sgeOrderServiceAgent.testConnection(UserSession.getInstance().getSgeServiceUrl());
                 if (connected) {
                     return this.sgeOrderServiceAgent.sendOrder(UserSession.getInstance().getUserId(),
                             UserSession.getInstance().getOrder().getMesa() != null ? UserSession.getInstance().getOrder().getMesa().getId() : 0,
@@ -49,25 +49,26 @@ public class SendOrderAsyncTask extends AsyncTask<Void, Void, Integer> {
             } while (i <= 10);
         } catch (Exception e) {
         }
-        return -1;
+        return null;
     }
 
-    protected void onPostExecute(Integer result) {
+    protected void onPostExecute(Boolean result) {
         progressDialog.dismiss();
-        if (result > 0) {
-            showToast("El pedido fue enviado correctamente.");
-            UserSession.getInstance().setOrder(null);
-            ((OrderActivity) activity).finish();
-        } else if (result == 0) {
-            showToast("Error: El pedido fue rechazado.");
-        } else if (result < 0) {
-            showToast("Error: No fue posible establecer conexión con el servicio SGE. " +
-                    "\nAsegúrese de tener habilitada la conexion Wi-Fi y vuela a intentarlo.");
+        if (result == null){
+            showToast(String.format("Error: No fue posible establecer conexión con el servicio SGE. \nAsegúrese de tener habilitada la conexion Wi-Fi y vuela a intentarlo."));
+        } else {
+            if (result) {
+                showToast("El pedido fue enviado correctamente.");
+                UserSession.getInstance().setOrder(null);
+                ((OrderActivity) activity).finish();
+            } else {
+                showToast("Error: El pedido fue rechazado.");
+            }
         }
     }
 
     private void showToast(String msg) {
-        Toast error = Toast.makeText(this.activity, msg, Toast.LENGTH_SHORT);
-        error.show();
+        Toast toast = Toast.makeText(this.activity, msg, Toast.LENGTH_SHORT);
+        toast.show();
     }
 }
