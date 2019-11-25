@@ -23,7 +23,7 @@ public interface SGEOrderServiceAgent {
 
     List<Mesa> getTablesArray(String serviceUrl);
 
-    void sendOrder(int waiter, int table, String order, String notes, String serviceUrl);
+    int sendOrder(int waiter, int table, String order, String notes, String serviceUrl);
 
     boolean testConnection(String serviceUrl);
 

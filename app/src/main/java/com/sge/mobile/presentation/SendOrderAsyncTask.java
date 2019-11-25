@@ -11,7 +11,7 @@ import com.sge.mobile.infrastructure.data.serviceagents.SGEOrderServiceAgentImpl
 /**
  * Created by Daniel on 06/04/14.
  */
-public class SendOrderAsyncTask extends AsyncTask<Void, Void, Boolean> {
+public class SendOrderAsyncTask extends AsyncTask<Void, Void, Integer> {
     private final ProgressDialog progressDialog;
     private final SGEOrderServiceAgent sgeOrderServiceAgent;
     private final Context activity;
@@ -33,32 +33,34 @@ public class SendOrderAsyncTask extends AsyncTask<Void, Void, Boolean> {
     }
 
     @Override
-    protected Boolean doInBackground(Void... params) {
+    protected Integer doInBackground(Void... params) {
         try {
             int i = 0;
             do {
                 this.connected = this.sgeOrderServiceAgent.testConnection(UserSession.getInstance().getSgeServiceUrl());
                 if (connected) {
-                    this.sgeOrderServiceAgent.sendOrder(UserSession.getInstance().getUserId(),
+                    return this.sgeOrderServiceAgent.sendOrder(UserSession.getInstance().getUserId(),
                             UserSession.getInstance().getOrder().getMesa() != null ? UserSession.getInstance().getOrder().getMesa().getId() : 0,
                             UserSession.getInstance().getOrder().toString(),
                             UserSession.getInstance().getOrder().getObservacion(),
                             UserSession.getInstance().getSgeServiceUrl());
                 }
                 i++;
-            } while (!this.connected && i <= 10);
+            } while (i <= 10);
         } catch (Exception e) {
         }
-        return this.connected;
+        return -1;
     }
 
-    protected void onPostExecute(Boolean result) {
+    protected void onPostExecute(Integer result) {
         progressDialog.dismiss();
-        if (result) {
+        if (result > 0) {
             showToast("El pedido fue enviado correctamente.");
             UserSession.getInstance().setOrder(null);
             ((OrderActivity) activity).finish();
-        } else {
+        } else if (result == 0) {
+            showToast("Error: El pedido fue rechazado.");
+        } else if (result < 0) {
             showToast("Error: No fue posible establecer conexión con el servicio SGE. " +
                     "\nAsegúrese de tener habilitada la conexion Wi-Fi y vuela a intentarlo.");
         }

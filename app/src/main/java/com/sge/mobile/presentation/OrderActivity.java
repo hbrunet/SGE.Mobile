@@ -131,7 +131,8 @@ public class OrderActivity extends AppCompatActivity {
                     SendOrderAsyncTask sendOrderAsyncTask = new SendOrderAsyncTask(OrderActivity.this);
                     sendOrderAsyncTask.execute();
                 } else {
-                    this.showOrderConfirmationDialog();
+                    Toast.makeText(getBaseContext(), "Debe seleccionar la mesa.", Toast.LENGTH_SHORT)
+                            .show();
                 }
             } else {
                 Toast.makeText(getBaseContext(), "La lista de productos es obligatoria.", Toast.LENGTH_SHORT)
@@ -145,7 +146,6 @@ public class OrderActivity extends AppCompatActivity {
 
     public void selectTable(View button) {
         Intent intent = new Intent(this, TablesActivity.class);
-         intent.putExtra("addEmpty", true);
         startActivityForResult(intent, PICK_TABLE_REQUEST);
     }
 
